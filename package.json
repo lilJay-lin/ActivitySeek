@@ -1,0 +1,41 @@
+{
+  "name": "activityseek",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "jquery": "^1.11.3"
+  },
+  "devDependencies": {
+    "autoprefixer-loader": "^3.1.0",
+    "browser-sync": "^2.9.12",
+    "css-loader": "^0.23.0",
+    "del": "^2.2.0",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-less": "^3.0.5",
+    "gulp-load-plugins": "^1.1.0",
+    "gulp-minify-css": "^1.2.1",
+    "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-rev": "^6.0.1",
+    "gulp-size": "^2.0.0",
+    "gulp-uglify": "^1.5.1",
+    "gulp-watch": "^4.3.5",
+    "gulp-zip": "^3.0.2",
+    "hogan.js": "^3.0.2",
+    "imports-loader": "^0.6.5",
+    "less": "^2.5.3",
+    "less-loader": "^2.2.1",
+    "loader-utils": "^0.2.11",
+    "minimist": "^1.2.0",
+    "mustache-loader": "^0.3.0",
+    "path": "^0.12.7",
+    "run-sequence": "^1.1.5",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.6"
+  }
+}
