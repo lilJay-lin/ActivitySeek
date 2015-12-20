@@ -26,7 +26,11 @@
 
 ## 使用：
    编译所有 `gulp build` 
+   
    编译所有，并开启服务`gulp preview`
+   
    编译指定文件夹`gulp build -f fileName`
+   
    编译指定文件夹`gulp preview  -f fileName`
+   
    打包指定文件夹下fileName的文件，指定包名ofileName.zip `gulp zip -f fileName -o ofileName`
