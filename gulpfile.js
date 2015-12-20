@@ -7,6 +7,7 @@ var browersync = require('browser-sync'),
     path = require('path'),
     gulp = require('gulp'),
     del = require('del'),
+    fs = require('fs'),
     $ = require('gulp-load-plugins')(),
     parseArgs  = require('minimist'),
     runSequence = require('run-sequence');
@@ -18,17 +19,21 @@ var argv = parseArgs(process.argv.slice(2),{
         'o': date.getFullYear() + '' + (date.getMonth() + 1) + '' + date.getDate()//输出文件名
     }
 });
+
 var pth = 'src/' + (argv.f == 'nofound' ? '**' : argv.f),
     dist = 'dist/' + (argv.f == 'nofound' ? '' : argv.f);
+
 var config = {
     dist:{
-      css: dist + '/css',
-        js: dist + '/js'
+        css: dist + '/css',
+        js: dist + '/js',
+        html: dist
     },
     build: {
         zip: 'dist/build',
         js:  pth + '/js/*',
-        less:  pth + '/css/*'
+        less:  pth + '/css/*',
+        html: pth + '/**/*.html'
     },
     AUTOPREFIXER_BROWSERS: [
         'ie >= 8',
@@ -69,13 +74,14 @@ var config = {
 });*/
 
 gulp.task('appServer',function(){
+    var dir = './dist' +  (argv.f == 'nofound' ? '' : '/' + argv.f);
     var files = [
-        './dist/*'
+        dir + '/*'
     ];
 
     browersync.init(files, {
         server: {
-            baseDir: './dist'
+            baseDir: dir
         }
     });
 });
@@ -137,11 +143,23 @@ gulp.task("build:less", function(){
 
 gulp.task('build', ['build:less', 'build:js']);
 
+gulp.task('copy', function(){
+   gulp.src(config.build.html)
+       .pipe($.watch(config.build.html))
+       .pipe(gulp.dest(config.dist.html))
+});
+
 gulp.task('watch', function(){
     gulp.watch(config.build.less, ['build:less']);
     gulp.watch(config.build.js, ['build:js']);
+    gulp.watch(config.build.html, ['copy']);
 });
 
+gulp.task("clean", function(cb){
+    return del([
+        dist
+    ], cb);
+});
 
 gulp.task("archive:clean", function(cb){
     return del([
@@ -164,5 +182,52 @@ gulp.task('zip', function(cb){
         cb);
 });
 
-gulp.task('preview',['appServer', 'build']);
-gulp.task('default',['build']);
+
+//创建文件夹
+function ensureDir(pth){
+    fs.mkdirSync(pth);
+    fs.mkdirSync(pth + '/css');
+    fs.mkdirSync(pth + '/js');
+    createHtmlTemplate(pth);
+}
+
+function createHtmlTemplate(pth){
+    var html = '<!DOCTYPE html>\n' +
+        '<html lang="en">\n' +
+        '   <head>\n' +
+        '       <meta charset="UTF-8">\n' +
+        '       <title></title>\n' +
+        '   </head>\n' +
+        '   <body>\n' +
+        '       hello world\n' +
+        '   </body>\n' +
+        '</html>' ;
+    fs.writeFileSync(pth + '/index.html', html)
+}
+gulp.task('prepare', function(){
+    try{
+        fs.statSync(pth)
+    }catch(e){
+        ensureDir(pth);
+/*        return gulp.src(config.build.html)
+            .pipe(gulp.dest(config.dist.html))*/
+    }
+});
+gulp.task('preview',function(cb){
+    runSequence(
+        'prepare',
+        'clean',
+        'copy',
+        ['appServer', 'build'],
+        cb
+    )
+});
+gulp.task('default',function(cb){
+    runSequence(
+        'prepare',
+        'clean',
+        'copy',
+        'build',
+        cb
+    )
+});
