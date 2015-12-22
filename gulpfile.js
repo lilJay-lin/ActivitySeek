@@ -31,9 +31,10 @@ var config = {
     },
     build: {
         zip: 'dist/build',
-        js:  pth + '/js/*',
-        less:  pth + '/css/*',
-        html: pth + '/**/*.html'
+        js:  pth + '/js/*.js',
+        less:  pth + '/css/*.*',
+        html: pth + '/**/*.html',
+        vendor: 'src/vendor'
     },
     AUTOPREFIXER_BROWSERS: [
         'ie >= 8',
@@ -76,7 +77,7 @@ var config = {
 gulp.task('appServer',function(){
     var dir = './dist' +  (argv.f == 'nofound' ? '' : '/' + argv.f);
     var files = [
-        dir + '/*'
+        dir
     ];
 
     browersync.init(files, {
@@ -132,22 +133,40 @@ gulp.task("build:less", function(){
         .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
         .pipe($.size({showFiles: true, title: 'source'}))
         .pipe($.minifyCss({noAdvanced: true}))
-        .pipe($.rename({
+/*        .pipe($.rename({
             suffix: '.min',
             extname: '.css'
-        }))
+        }))*/
         .pipe(gulp.dest(config.dist.css))
         .pipe($.size({showFiles: true, title: 'minified'}))
         .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
+
+/*
+gulp.task("build:package", function(){
+    var pkg = require(config.build.pkg);
+    console.log(JSON.stringify(pkg));
+});
+*/
+
+
 gulp.task('build', ['build:less', 'build:js']);
 
-gulp.task('copy', function(){
-   gulp.src(config.build.html)
-       .pipe($.watch(config.build.html))
-       .pipe(gulp.dest(config.dist.html))
+gulp.task('copy:html', function(){
+    gulp.src(config.build.html)
+      .pipe($.watch(config.build.html))
+      .pipe(gulp.dest(config.dist.html))
 });
+
+gulp.task('copy:json', function(){
+    gulp.src([
+        'node_modules/jquery/dist/jquery.min.js'
+    ])
+      .pipe(gulp.dest(config.build.vendor));
+});
+
+gulp.task('copy', ['copy:html', 'copy:json']);
 
 gulp.task('watch', function(){
     gulp.watch(config.build.less, ['build:less']);
@@ -193,17 +212,23 @@ function ensureDir(pth){
 
 function createHtmlTemplate(pth){
     var html = '<!DOCTYPE html>\n' +
-        '<html lang="en">\n' +
-        '   <head>\n' +
-        '       <meta charset="UTF-8">\n' +
-        '       <title></title>\n' +
-        '   </head>\n' +
-        '   <body>\n' +
-        '       hello world\n' +
-        '   </body>\n' +
-        '</html>' ;
+      '<html lang="en">\n' +
+      '   <head>\n' +
+      '       <meta charset="UTF-8">\n' +
+      '       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">\n' +
+      '       <meta http-equiv="Cache-Control" content="no-transform">\n' +
+      '       <meta http-equiv="Cache-Control" content="no-siteapp">\n' +
+      '       <meta name="apple-mobile-web-app-capable" content="yes">\n' +
+      '       <meta name="apple-mobile-web-app-status-bar-style" content="black">\n' +
+      '       <title></title>\n' +
+      '   </head>\n' +
+      '   <body>\n' +
+      '       hello world\n' +
+      '   </body>\n' +
+      '</html>' ;
     fs.writeFileSync(pth + '/index.html', html)
 }
+
 gulp.task('prepare', function(){
     try{
         fs.statSync(pth)
