@@ -29,6 +29,8 @@
 
 
 ## 使用：
+   安装依赖`npm install`
+   
    编译所有文件 `gulp build` 
    
    编译所有，并开启服务`gulp preview`
