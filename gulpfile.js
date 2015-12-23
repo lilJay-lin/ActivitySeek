@@ -97,6 +97,9 @@ gulp.task('lint', function() {
 gulp.task("build:js", function(){
    return gulp.src(config.build.js)
        .pipe($.watch(config.build.js))
+       .pipe($.jshint())
+       .pipe($.jshint.reporter('default'))
+       .pipe($.uglify())
        .pipe($.plumber({errorHandler: function (err) {
            // 处理编译less错误提示  防止错误之后gulp任务直接中断
            // $.notify.onError({
@@ -107,7 +110,6 @@ gulp.task("build:js", function(){
            console.log(err);
            this.emit('end');
        }}))
-       .pipe($.uglify())
        //.pipe($.rev()) //添加MD5
        .pipe(gulp.dest(config.dist.js))
        .pipe($.size({showFiles: true, title: 'uglify'}))
@@ -159,14 +161,14 @@ gulp.task('copy:html', function(){
       .pipe(gulp.dest(config.dist.html))
 });
 
-gulp.task('copy:json', function(){
+gulp.task('copy:js', function(){
     gulp.src([
         'node_modules/jquery/dist/jquery.min.js'
     ])
       .pipe(gulp.dest(config.build.vendor));
 });
 
-gulp.task('copy', ['copy:html', 'copy:json']);
+gulp.task('copy', ['copy:html', 'copy:js']);
 
 gulp.task('watch', function(){
     gulp.watch(config.build.less, ['build:less']);
