@@ -9,8 +9,8 @@ var browersync = require('browser-sync'),
     del = require('del'),
     fs = require('fs'),
     $ = require('gulp-load-plugins')(),
-    parseArgs  = require('minimist'),
-    runSequence = require('run-sequence');
+    runSequence = require('run-sequence'),
+    parseArgs  = require('minimist');
 var date = new Date();
 var argv = parseArgs(process.argv.slice(2),{
     string: ['f', 'o'],
@@ -22,19 +22,20 @@ var argv = parseArgs(process.argv.slice(2),{
 
 var pth = 'src/' + (argv.f == 'nofound' ? '**' : argv.f),
     dist = 'dist/' + (argv.f == 'nofound' ? '' : argv.f);
-
+var isProduction = process.env.NODE_ENV === 'production';
 var config = {
     dist:{
         css: dist + '/css',
         js: dist + '/js',
-        html: dist
+        html: dist,
+        vendor: dist
     },
     build: {
         zip: 'dist/build',
         js:  pth + '/js/*.js',
         less:  pth + '/css/*.*',
         html: pth + '/**/*.html',
-        vendor: 'src/vendor'
+        vendor:  pth + '/**/*.js',
     },
     AUTOPREFIXER_BROWSERS: [
         'ie >= 8',
@@ -87,45 +88,43 @@ gulp.task('appServer',function(){
     });
 });
 
+/*
 gulp.task('lint', function() {
     return gulp.src(config.build.js)
         .pipe($.jshint())
         .pipe($.jshint.reporter('hint'));
 });
+*/
 
 
 gulp.task("build:js", function(){
-   return gulp.src(config.build.js)
-       .pipe($.watch(config.build.js))
-       .pipe($.jshint())
-       .pipe($.jshint.reporter('default'))
-       .pipe($.uglify())
-       .pipe($.plumber({errorHandler: function (err) {
-           // 处理编译less错误提示  防止错误之后gulp任务直接中断
-           // $.notify.onError({
-           //           title:    "编译错误",
-           //           message:  "错误信息: <%= error.message %>",
-           //           sound:    "Bottle"
-           //       })(err);
-           console.log(err);
-           this.emit('end');
-       }}))
-       //.pipe($.rev()) //添加MD5
-       .pipe(gulp.dest(config.dist.js))
-       .pipe($.size({showFiles: true, title: 'uglify'}))
-       .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
+       return gulp.src(config.build.js,{sourcemaps: true})
+           .pipe($.if(!isProduction, $.watch(config.build.js)))
+           .pipe($.plumber({errorHandler: function (err) {
+               // 处理编译less错误提示  防止错误之后gulp任务直接中断
+               // $.notify.onError({
+               //           title:    "编译错误",
+               //           message:  "错误信息: <%= error.message %>",
+               //           sound:    "Bottle"
+               //       })(err);
+               console.log(err);
+               this.emit('end');
+           }}))
+           //.pipe($.if(isProduction, $.sourcemaps.init()))
+           .pipe($.jshint())
+           .pipe($.jshint.reporter('default'))
+           .pipe($.if(isProduction, $.uglify()))
+           //.pipe($.if(isProduction, $.sourcemaps.write()))
+           //.pipe($.rev()) //添加MD5
+           .pipe(gulp.dest(config.dist.js))
+           .pipe($.size({showFiles: true, title: 'uglify'}))
+           .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
 gulp.task("build:less", function(){
     return gulp.src(config.build.less)
-        .pipe($.watch(config.build.less))
+        .pipe($.if(!isProduction, $.watch(config.build.less)))
         .pipe($.plumber({errorHandler: function (err) {
-            // 处理编译less错误提示  防止错误之后gulp任务直接中断
-            // $.notify.onError({
-            //           title:    "编译错误",
-            //           message:  "错误信息: <%= error.message %>",
-            //           sound:    "Bottle"
-            //       })(err);
             console.log(err);
             this.emit('end');
         }}))
@@ -135,10 +134,6 @@ gulp.task("build:less", function(){
         .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
         .pipe($.size({showFiles: true, title: 'source'}))
         .pipe($.minifyCss({noAdvanced: true}))
-/*        .pipe($.rename({
-            suffix: '.min',
-            extname: '.css'
-        }))*/
         .pipe(gulp.dest(config.dist.css))
         .pipe($.size({showFiles: true, title: 'minified'}))
         .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
@@ -153,22 +148,32 @@ gulp.task("build:package", function(){
 */
 
 
-gulp.task('build', ['build:less', 'build:js']);
+gulp.task('build', function(cb){
+    runSequence(
+        ['build:less', 'build:js', 'build:html', 'build:vendor'],
+        cb
+    )
+});
 
-gulp.task('copy:html', function(){
-    gulp.src(config.build.html)
-      .pipe($.watch(config.build.html))
-      .pipe(gulp.dest(config.dist.html))
+gulp.task('build:html', function(){
+    return gulp.src(config.build.html)
+        .pipe($.if(!isProduction, $.watch(config.build.html)))
+        .pipe(gulp.dest(config.dist.html));
+});
+gulp.task('build:vendor', function(){
+    return gulp.src(config.build.vendor)
+        .pipe($.if(!isProduction, $.watch(config.build.vendor)))
+        .pipe(gulp.dest(config.dist.vendor));
 });
 
 gulp.task('copy:js', function(){
-    gulp.src([
+    return gulp.src([
         'node_modules/jquery/dist/jquery.min.js'
     ])
-      .pipe(gulp.dest(config.build.vendor));
+      .pipe(gulp.dest('src/vendor'));
 });
 
-gulp.task('copy', ['copy:html', 'copy:js']);
+gulp.task('copy', [ 'copy:js']);
 
 gulp.task('watch', function(){
     gulp.watch(config.build.less, ['build:less']);
@@ -197,7 +202,10 @@ gulp.task('archive:zip', function() {
 });
 
 gulp.task('zip', function(cb){
-    runSequence(
+    isProduction = true;
+     runSequence (
+         'clean',
+         'build',
         'archive:clean',
         'archive:zip',
         cb);
@@ -209,6 +217,7 @@ function ensureDir(pth){
     fs.mkdirSync(pth);
     fs.mkdirSync(pth + '/css');
     fs.mkdirSync(pth + '/js');
+    fs.mkdirSync(pth + '/vendor');
     createHtmlTemplate(pth);
 }
 
@@ -231,7 +240,7 @@ function createHtmlTemplate(pth){
     fs.writeFileSync(pth + '/index.html', html)
 }
 
-gulp.task('prepare', function(){
+gulp.task('prepare', function(cb){
     try{
         fs.statSync(pth)
     }catch(e){
@@ -239,9 +248,10 @@ gulp.task('prepare', function(){
 /*        return gulp.src(config.build.html)
             .pipe(gulp.dest(config.dist.html))*/
     }
+    return cb();
 });
 gulp.task('preview',function(cb){
-    runSequence(
+     runSequence (
         'prepare',
         'clean',
         'copy',
@@ -249,8 +259,8 @@ gulp.task('preview',function(cb){
         cb
     )
 });
-gulp.task('default',function(cb){
-    runSequence(
+    gulp.task('default',function(cb){
+     runSequence (
         'prepare',
         'clean',
         'copy',

@@ -26,10 +26,14 @@
 ## 编码约束：
 
 * 1.less 至少需要有一个导入基础类 `@import 'base.less'`
+* 2.第三方类库（包括jquery)都放在vendor文件夹，不做代码质量检查和压缩
 
 
 ## 使用：
-   安装依赖`npm install`
+
+* 安装依赖`npm install`
+
+* 编译
    
    编译所有文件 `gulp build` 
    
@@ -38,5 +42,13 @@
    编译指定文件夹，如果fileName不存在则自动在src目录下新建fileName目录结构`gulp build -f fileName`
    
    编译指定文件夹，如果fileName不存在则自动在src目录下新建fileName目录结构`gulp preview  -f fileName`
-   
+      
+* 打包
+
    打包指定文件夹下fileName的文件，指定包名ofileName.zip，未指定包名默认使用当前日期名称 `gulp zip -f fileName -o ofileName`
+
+* 清除
+  
+  清除所有dist目录下的文件 `gulp clean`
+  
+  清除所有build目录下打包的zip文件 `gulp archive:clean`
