@@ -12,11 +12,13 @@ var browersync = require('browser-sync'),
     runSequence = require('run-sequence'),
     parseArgs  = require('minimist');
 var date = new Date();
+var m = date.getMonth() + 1,
+    d = date.getDate();
 var argv = parseArgs(process.argv.slice(2),{
     string: ['f', 'o'],
     default: {
         'f': 'nofound',
-        'o': date.getFullYear() + '' + (date.getMonth() + 1) + '' + date.getDate()//输出文件名
+        'o': date.getFullYear() + '' + (m < 10 ? '0' + m : m) + '' + (d < 10 ? '0' + d : d)//输出文件名
     }
 });
 
@@ -27,6 +29,7 @@ var config = {
     dist:{
         css: dist + '/css',
         js: dist + '/js',
+        img: dist + '/img',
         html: dist,
         vendor: dist
     },
@@ -34,6 +37,7 @@ var config = {
         zip: 'dist/build',
         js:  pth + '/js/*.js',
         less:  pth + '/css/*.*',
+        img: pth + '/img/*',
         html: pth + '/**/*.html',
         vendor:  pth + '/**/*.js',
     },
@@ -108,7 +112,7 @@ gulp.task("build:js", function(){
                //           sound:    "Bottle"
                //       })(err);
                console.log(err);
-               this.emit('end');
+               //this.emit('end');
            }}))
            //.pipe($.if(isProduction, $.sourcemaps.init()))
            .pipe($.jshint())
@@ -116,6 +120,7 @@ gulp.task("build:js", function(){
            .pipe($.if(isProduction, $.uglify()))
            //.pipe($.if(isProduction, $.sourcemaps.write()))
            //.pipe($.rev()) //添加MD5
+           .pipe($.plumber.stop())
            .pipe(gulp.dest(config.dist.js))
            .pipe($.size({showFiles: true, title: 'uglify'}))
            .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
@@ -126,14 +131,15 @@ gulp.task("build:less", function(){
         .pipe($.if(!isProduction, $.watch(config.build.less)))
         .pipe($.plumber({errorHandler: function (err) {
             console.log(err);
-            this.emit('end');
+            //this.emit('end');
         }}))
         .pipe($.less({
             paths: [ path.join(__dirname, 'src/common') ]
         }))
         .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
         .pipe($.size({showFiles: true, title: 'source'}))
-        .pipe($.minifyCss({noAdvanced: true}))
+        .pipe($.if(isProduction, $.minifyCss({noAdvanced: true})))
+        .pipe($.plumber.stop())
         .pipe(gulp.dest(config.dist.css))
         .pipe($.size({showFiles: true, title: 'minified'}))
         .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
@@ -150,7 +156,7 @@ gulp.task("build:package", function(){
 
 gulp.task('build', function(cb){
     runSequence(
-        ['build:less', 'build:js', 'build:html', 'build:vendor'],
+        ['build:less', 'build:js', 'build:html', 'build:vendor', 'build:img'],
         cb
     )
 });
@@ -159,6 +165,11 @@ gulp.task('build:html', function(){
     return gulp.src(config.build.html)
         .pipe($.if(!isProduction, $.watch(config.build.html)))
         .pipe(gulp.dest(config.dist.html));
+});
+gulp.task('build:img', function(){
+    return gulp.src(config.build.img)
+        .pipe($.if(!isProduction, $.watch(config.build.img)))
+        .pipe(gulp.dest(config.dist.img));
 });
 gulp.task('build:vendor', function(){
     return gulp.src(config.build.vendor)
@@ -217,13 +228,15 @@ function ensureDir(pth){
     fs.mkdirSync(pth);
     fs.mkdirSync(pth + '/css');
     fs.mkdirSync(pth + '/js');
+    fs.mkdirSync(pth + '/img');
     fs.mkdirSync(pth + '/vendor');
     createHtmlTemplate(pth);
 }
 
 function createHtmlTemplate(pth){
-    var html = '<!DOCTYPE html>\n' +
+/*    var html = '<!DOCTYPE html>\n' +
       '<html lang="en">\n' +
+    '   <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>' +
       '   <head>\n' +
       '       <meta charset="UTF-8">\n' +
       '       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">\n' +
@@ -236,7 +249,26 @@ function createHtmlTemplate(pth){
       '   <body>\n' +
       '       hello world\n' +
       '   </body>\n' +
-      '</html>' ;
+      '</html>' ;*/
+    var html =
+`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title></title>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+</head>
+<body>
+    hell world!
+</body>
+</html>`;
     fs.writeFileSync(pth + '/index.html', html)
 }
 
