@@ -167,3 +167,43 @@
 //Flex box
 //
 //------------------------------
+
+
+
+/* ==========================================================================
+   divider
+ ============================================================================ */
+.divider(@divider-def-color: #bfbfbf, @divider-margin:0){
+  height:0;
+  overflow: hidden;
+  border-top: 1px solid @divider-def-color;
+  margin:@divider-margin 0;
+}
+.divider(@divider-def-color: #bfbfbf, @divider-dotted: dotted){
+  height:0;
+  overflow: hidden;
+  border-top: 1px solid @divider-def-color;
+  margin: 0;
+  border-style: @divider-dotted;
+}
+
+.divider(@divider-def-color: #bfbfbf, @divider-dotted: dotted, @divider-margin: 0){
+  height:0;
+  overflow: hidden;
+  border-top: 1px solid @divider-def-color;
+  margin:@divider-margin 0;
+  border-style: @divider-dotted;
+}
+
+/*
+  文字字体 、颜色
+*/
+.font(@fontSize: 0.2rem, @color: @black){
+  font-size: @fontSize;
+  color: @color;
+}
+.font(@fontSize: 0.2rem, @color: @black, @line-height: 1.6){
+  font-size: @fontSize;
+  color: @color;
+  line-height: @line-height;
+}

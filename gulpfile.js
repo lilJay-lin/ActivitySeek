@@ -31,6 +31,7 @@ var config = {
         js: dist + '/js',
         img: dist + '/img',
         html: dist,
+        font: dist + '/font',
         vendor: dist
     },
     build: {
@@ -39,6 +40,7 @@ var config = {
         less:  pth + '/css/*.*',
         img: pth + '/img/*',
         html: pth + '/**/*.html',
+        font: pth + '/font/*.*',
         vendor:  pth + '/**/*.js',
     },
     AUTOPREFIXER_BROWSERS: [
@@ -82,7 +84,7 @@ var config = {
 gulp.task('appServer',function(){
     var dir = './dist' +  (argv.f == 'nofound' ? '' : '/' + argv.f);
     var files = [
-        dir
+        dir + '/**/*.*'
     ];
 
     browersync.init(files, {
@@ -134,7 +136,7 @@ gulp.task("build:less", function(){
             //this.emit('end');
         }}))
         .pipe($.less({
-            paths: [ path.join(__dirname, 'src/common') ]
+            paths: [ path.join(__dirname, 'src/common') , path.join(__dirname, pth, '/css')]
         }))
         .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
         .pipe($.size({showFiles: true, title: 'source'}))
@@ -156,7 +158,7 @@ gulp.task("build:package", function(){
 
 gulp.task('build', function(cb){
     runSequence(
-        ['build:less', 'build:js', 'build:html', 'build:vendor', 'build:img'],
+        ['build:less', 'build:js', 'build:html', 'build:font', 'build:vendor', 'build:img'],
         cb
     )
 });
@@ -170,6 +172,11 @@ gulp.task('build:img', function(){
     return gulp.src(config.build.img)
         .pipe($.if(!isProduction, $.watch(config.build.img)))
         .pipe(gulp.dest(config.dist.img));
+});
+gulp.task('build:font', function(){
+    return gulp.src(config.build.font)
+        .pipe($.if(!isProduction, $.watch(config.build.font)))
+        .pipe(gulp.dest(config.dist.font));
 });
 gulp.task('build:vendor', function(){
     return gulp.src(config.build.vendor)
