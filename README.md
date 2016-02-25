@@ -39,9 +39,9 @@
    
    编译所有，并开启服务`gulp preview`
    
-   编译指定文件夹，如果fileName不存在则自动在src目录下新建fileName目录结构`gulp -f fileName`
+   编译指定文件夹，如果fileName不存在则自动在src目录下新建fileName目录结构 ~~`gulp -f fileName`~~ `gulp build -f fileName`
    
-   编译指定文件夹，如果fileName不存在则自动在src目录下新建fileName目录结构`gulp preview  -f fileName`
+   编译指定文件夹，如果fileName不存在则自动在src目录下新建fileName目录结构 ~~`gulp preview  -f fileName`~~ `gulp -f fileName`
       
 * 打包
 

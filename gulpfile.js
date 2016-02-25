@@ -24,7 +24,7 @@ var argv = parseArgs(process.argv.slice(2),{
 
 var pth = 'src/' + (argv.f == 'nofound' ? '**' : argv.f),
     dist = 'dist/' + (argv.f == 'nofound' ? '' : argv.f);
-var isProduction = process.env.NODE_ENV === 'production';
+var isProduction = false;
 var config = {
     dist:{
         css: dist + '/css',
@@ -38,7 +38,7 @@ var config = {
         zip: 'dist/build',
         js:  pth + '/js/*.js',
         less:  pth + '/css/*.*',
-        img: pth + '/img/*',
+        img: pth + '/img/*.*',
         html: pth + '/**/*.html',
         font: pth + '/font/*.*',
         vendor:  pth + '/**/*.js',
@@ -117,8 +117,8 @@ gulp.task("build:js", function(){
                //this.emit('end');
            }}))
            //.pipe($.if(isProduction, $.sourcemaps.init()))
-           .pipe($.jshint())
-           .pipe($.jshint.reporter('default'))
+           //.pipe($.jshint())
+           //.pipe($.jshint.reporter('default'))
            .pipe($.if(isProduction, $.uglify()))
            //.pipe($.if(isProduction, $.sourcemaps.write()))
            //.pipe($.rev()) //添加MD5
@@ -156,7 +156,7 @@ gulp.task("build:package", function(){
 */
 
 
-gulp.task('build', function(cb){
+gulp.task('build:all', function(cb){
     runSequence(
         ['build:less', 'build:js', 'build:html', 'build:font', 'build:vendor', 'build:img'],
         cb
@@ -223,7 +223,7 @@ gulp.task('zip', function(cb){
     isProduction = true;
      runSequence (
          'clean',
-         'build',
+         'build:all',
         'archive:clean',
         'archive:zip',
         cb);
@@ -289,21 +289,21 @@ gulp.task('prepare', function(cb){
     }
     return cb();
 });
-gulp.task('preview',function(cb){
+gulp.task('default',function(cb){
      runSequence (
         'prepare',
         'clean',
         'copy',
-        ['appServer', 'build'],
+        ['appServer', 'build:all'],
         cb
     )
 });
-    gulp.task('default',function(cb){
+    gulp.task('build',function(cb){
      runSequence (
         'prepare',
         'clean',
         'copy',
-        'build',
+        'build:all',
         cb
     )
 });
