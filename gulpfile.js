@@ -3,7 +3,7 @@
 
 'use strict';
 
-var browersync = require('browser-sync'),
+var browserSync = require('browser-sync'),
     path = require('path'),
     gulp = require('gulp'),
     del = require('del'),
@@ -66,66 +66,75 @@ var config = {
 
 
 /*gulp.task("webpack", function(callback) {
-    var myConfig = Object.create(webpackConfig);
-    // run webpack
-    webpack(
-        // configuration
-        myConfig
-        , function(err, stats) {
-            // if(err) throw new gutil.PluginError("webpack", err);
-            // gutil.log("[webpack]", stats.toString({
-            //     // output options
-            // }));
-            callback();
-            //this.emit('end');//报错不中断
-        });
-});*/
+ var myConfig = Object.create(webpackConfig);
+ // run webpack
+ webpack(
+ // configuration
+ myConfig
+ , function(err, stats) {
+ // if(err) throw new gutil.PluginError("webpack", err);
+ // gutil.log("[webpack]", stats.toString({
+ //     // output options
+ // }));
+ callback();
+ //this.emit('end');//报错不中断
+ });
+ });*/
 
 gulp.task('appServer',function(){
-    var dir = './dist' +  (argv.f == 'nofound' ? '' : '/' + argv.f);
-    var files = [
-        dir + '/**/*.*'
-    ];
+    var dir = './dist/' +  (argv.f == 'nofound' ? '' :  argv.f + '/');
+    /*    var files = [
+     dir + '/!**!/!*.*'
+     ];*/
 
-    browersync.init(files, {
+    browserSync({
         server: {
             baseDir: dir
         }
     });
+
+    //gulp.watch(config.build.less, ['less-watch']);
 });
+//创建一个任务确保JS任务完成之前能够继续响应
+// 浏览器重载
+/*
+gulp.task('less-watch', ['build:less'], browserSync.reload);
+gulp.task('js-watch', ['build:js'], browserSync.reload);
+*/
 
 /*
-gulp.task('lint', function() {
-    return gulp.src(config.build.js)
-        .pipe($.jshint())
-        .pipe($.jshint.reporter('hint'));
-});
-*/
+ gulp.task('lint', function() {
+ return gulp.src(config.build.js)
+ .pipe($.jshint())
+ .pipe($.jshint.reporter('hint'));
+ });
+ */
 
 
 gulp.task("build:js", function(){
-       return gulp.src(config.build.js,{sourcemaps: true})
-           .pipe($.if(!isProduction, $.watch(config.build.js)))
-           .pipe($.plumber({errorHandler: function (err) {
-               // 处理编译less错误提示  防止错误之后gulp任务直接中断
-               // $.notify.onError({
-               //           title:    "编译错误",
-               //           message:  "错误信息: <%= error.message %>",
-               //           sound:    "Bottle"
-               //       })(err);
-               console.log(err);
-               //this.emit('end');
-           }}))
-           //.pipe($.if(isProduction, $.sourcemaps.init()))
-           //.pipe($.jshint())
-           //.pipe($.jshint.reporter('default'))
-           .pipe($.if(isProduction, $.uglify()))
-           //.pipe($.if(isProduction, $.sourcemaps.write()))
-           //.pipe($.rev()) //添加MD5
-           .pipe($.plumber.stop())
-           .pipe(gulp.dest(config.dist.js))
-           .pipe($.size({showFiles: true, title: 'uglify'}))
-           .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
+    return gulp.src(config.build.js,{sourcemaps: true})
+        //.pipe($.if(!isProduction, $.watch(config.build.js)))
+        .pipe($.plumber({errorHandler: function (err) {
+            // 处理编译less错误提示  防止错误之后gulp任务直接中断
+            // $.notify.onError({
+            //           title:    "编译错误",
+            //           message:  "错误信息: <%= error.message %>",
+            //           sound:    "Bottle"
+            //       })(err);
+            console.log(err);
+            //this.emit('end');
+        }}))
+        //.pipe($.if(isProduction, $.sourcemaps.init()))
+        //.pipe($.jshint())
+        //.pipe($.jshint.reporter('default'))
+        .pipe($.if(isProduction, $.uglify()))
+        //.pipe($.if(isProduction, $.sourcemaps.write()))
+        //.pipe($.rev()) //添加MD5
+        .pipe($.plumber.stop())
+        .pipe(gulp.dest(config.dist.js))
+        .pipe(browserSync.reload({stream:true}))
+        .pipe($.size({showFiles: true, title: 'uglify'}))
+        .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
 gulp.task("build:less", function(){
@@ -143,17 +152,18 @@ gulp.task("build:less", function(){
         .pipe($.if(isProduction, $.minifyCss({noAdvanced: true})))
         .pipe($.plumber.stop())
         .pipe(gulp.dest(config.dist.css))
+        .pipe(browserSync.reload({stream:true}))
         .pipe($.size({showFiles: true, title: 'minified'}))
         .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
 
 /*
-gulp.task("build:package", function(){
-    var pkg = require(config.build.pkg);
-    console.log(JSON.stringify(pkg));
-});
-*/
+ gulp.task("build:package", function(){
+ var pkg = require(config.build.pkg);
+ console.log(JSON.stringify(pkg));
+ });
+ */
 
 
 gulp.task('build:all', function(cb){
@@ -166,7 +176,8 @@ gulp.task('build:all', function(cb){
 gulp.task('build:html', function(){
     return gulp.src(config.build.html)
         .pipe($.if(!isProduction, $.watch(config.build.html)))
-        .pipe(gulp.dest(config.dist.html));
+        .pipe(gulp.dest(config.dist.html))
+        .pipe(browserSync.reload({stream:true}));
 });
 gulp.task('build:img', function(){
     return gulp.src(config.build.img)
@@ -186,18 +197,18 @@ gulp.task('build:vendor', function(){
 
 gulp.task('copy:js', function(){
     return gulp.src([
-        'node_modules/jquery/dist/jquery.min.js'
-    ])
-      .pipe(gulp.dest('src/vendor'));
+            'node_modules/jquery/dist/jquery.min.js'
+        ])
+        .pipe(gulp.dest('src/vendor'));
 });
 
 gulp.task('copy', [ 'copy:js']);
 
-gulp.task('watch', function(){
-    gulp.watch(config.build.less, ['build:less']);
-    gulp.watch(config.build.js, ['build:js']);
-    gulp.watch(config.build.html, ['copy']);
-});
+/*gulp.task('watch', function(){
+ gulp.watch(config.build.less, ['build:less']);
+ gulp.watch(config.build.js, ['build:js']);
+ gulp.watch(config.build.html, ['copy']);
+ });*/
 
 gulp.task("clean", function(cb){
     return del([
@@ -221,9 +232,9 @@ gulp.task('archive:zip', function() {
 
 gulp.task('zip', function(cb){
     isProduction = true;
-     runSequence (
-         'clean',
-         'build:all',
+    runSequence (
+        'clean',
+        'build:all',
         'archive:clean',
         'archive:zip',
         cb);
@@ -241,24 +252,24 @@ function ensureDir(pth){
 }
 
 function createHtmlTemplate(pth){
-/*    var html = '<!DOCTYPE html>\n' +
-      '<html lang="en">\n' +
-    '   <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>' +
-      '   <head>\n' +
-      '       <meta charset="UTF-8">\n' +
-      '       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">\n' +
-      '       <meta http-equiv="Cache-Control" content="no-transform">\n' +
-      '       <meta http-equiv="Cache-Control" content="no-siteapp">\n' +
-      '       <meta name="apple-mobile-web-app-capable" content="yes">\n' +
-      '       <meta name="apple-mobile-web-app-status-bar-style" content="black">\n' +
-      '       <title></title>\n' +
-      '   </head>\n' +
-      '   <body>\n' +
-      '       hello world\n' +
-      '   </body>\n' +
-      '</html>' ;*/
+    /*    var html = '<!DOCTYPE html>\n' +
+     '<html lang="en">\n' +
+     '   <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>' +
+     '   <head>\n' +
+     '       <meta charset="UTF-8">\n' +
+     '       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">\n' +
+     '       <meta http-equiv="Cache-Control" content="no-transform">\n' +
+     '       <meta http-equiv="Cache-Control" content="no-siteapp">\n' +
+     '       <meta name="apple-mobile-web-app-capable" content="yes">\n' +
+     '       <meta name="apple-mobile-web-app-status-bar-style" content="black">\n' +
+     '       <title></title>\n' +
+     '   </head>\n' +
+     '   <body>\n' +
+     '       hello world\n' +
+     '   </body>\n' +
+     '</html>' ;*/
     var html =
-`<!DOCTYPE html>
+        `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
@@ -284,13 +295,13 @@ gulp.task('prepare', function(cb){
         fs.statSync(pth)
     }catch(e){
         ensureDir(pth);
-/*        return gulp.src(config.build.html)
-            .pipe(gulp.dest(config.dist.html))*/
+        /*        return gulp.src(config.build.html)
+         .pipe(gulp.dest(config.dist.html))*/
     }
     return cb();
 });
 gulp.task('default',function(cb){
-     runSequence (
+    runSequence (
         'prepare',
         'clean',
         'copy',
@@ -298,8 +309,8 @@ gulp.task('default',function(cb){
         cb
     )
 });
-    gulp.task('build',function(cb){
-     runSequence (
+gulp.task('build',function(cb){
+    runSequence (
         'prepare',
         'clean',
         'copy',
