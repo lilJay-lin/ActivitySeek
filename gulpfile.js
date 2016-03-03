@@ -9,6 +9,7 @@ var browserSync = require('browser-sync'),
     del = require('del'),
     fs = require('fs'),
     $ = require('gulp-load-plugins')(),
+    base64 = require('gulp-base64'),
     runSequence = require('run-sequence'),
     parseArgs  = require('minimist');
 var date = new Date();
@@ -146,6 +147,13 @@ gulp.task("build:less", function(){
         }}))
         .pipe($.less({
             paths: [ path.join(__dirname, 'src/common') , path.join(__dirname, pth, '/css')]
+        }))
+        .pipe(base64({
+            baseDir: path.join(__dirname, pth + '/base64/'),
+            extensions: ['svg', 'png', /\.jpg#datauri$/i],
+            exclude:    [/\.server\.(com|net)\/dynamic\//, '--live.jpg'],
+            maxImageSize: 4*1024, // bytes
+            debug: true
         }))
         .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
         .pipe($.size({showFiles: true, title: 'source'}))
