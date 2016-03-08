@@ -9,6 +9,7 @@ var browserSync = require('browser-sync'),
     del = require('del'),
     fs = require('fs'),
     $ = require('gulp-load-plugins')(),
+    changed = require('gulp-changed'),
     base64 = require('gulp-base64'),
     runSequence = require('run-sequence'),
     parseArgs  = require('minimist');
@@ -114,7 +115,7 @@ gulp.task('js-watch', ['build:js'], browserSync.reload);
 
 gulp.task("build:js", function(){
     return gulp.src(config.build.js,{sourcemaps: true})
-        //.pipe($.if(!isProduction, $.watch(config.build.js)))
+        .pipe($.if(!isProduction, $.watch(config.build.js)))
         .pipe($.plumber({errorHandler: function (err) {
             // 处理编译less错误提示  防止错误之后gulp任务直接中断
             // $.notify.onError({
@@ -125,6 +126,7 @@ gulp.task("build:js", function(){
             console.log(err);
             //this.emit('end');
         }}))
+        .pipe(changed(config.dist.js, {extension: '.js'}))
         //.pipe($.if(isProduction, $.sourcemaps.init()))
         //.pipe($.jshint())
         //.pipe($.jshint.reporter('default'))
@@ -145,6 +147,7 @@ gulp.task("build:less", function(){
             console.log(err);
             //this.emit('end');
         }}))
+        .pipe(changed(config.dist.css, {extension: '.css'}))
         .pipe($.less({
             paths: [ path.join(__dirname, 'src/common') , path.join(__dirname, pth, '/css')]
         }))
@@ -153,7 +156,7 @@ gulp.task("build:less", function(){
             extensions: ['svg', 'png', /\.jpg#datauri$/i],
             exclude:    [/\.server\.(com|net)\/dynamic\//, '--live.jpg'],
             maxImageSize: 4*1024, // bytes
-            debug: true
+            /*debug: false*/
         }))
         .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
         .pipe($.size({showFiles: true, title: 'source'}))
@@ -184,6 +187,7 @@ gulp.task('build:all', function(cb){
 gulp.task('build:html', function(){
     return gulp.src(config.build.html)
         .pipe($.if(!isProduction, $.watch(config.build.html)))
+        .pipe(changed(config.dist.html, {extension: '.html'}))
         .pipe(gulp.dest(config.dist.html))
         .pipe(browserSync.reload({stream:true}));
 });
