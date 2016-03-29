@@ -293,7 +293,7 @@ function createHtmlTemplate(pth){
     <meta content="yes" name="apple-touch-fullscreen"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <title></title>
-    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,rem,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=(rem=n/d)+"px"};n.px2rem=function(px){var v=parseFloat(px);return v/rem;};n.rem2px=function(r){var v=parseFloat(r);return rem*v};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
 </head>
 <body>
     hell world!

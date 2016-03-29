@@ -198,12 +198,56 @@
 /*
   文字字体 、颜色
 */
-.font(@fontSize: 0.2rem, @color: @black){
+/*.font(@fontSize: 0.2rem, @color: @black){
   font-size: @fontSize;
   color: @color;
-}
-.font(@fontSize: 0.2rem, @color: @black, @line-height: 1.6){
+}*/
+.font(@fontSize: 0.2rem, @color: @black, @line-height: 1.2){
   font-size: @fontSize;
   color: @color;
   line-height: @line-height;
+}
+
+/*设置背景*/
+.background(@bg){
+  background: url(@bg) 50% 50% no-repeat;
+  background-size: 100% 100%;
+}
+
+/*平分布局*/
+.avg(@counter){
+  .avg-@{counter}{
+    clear: both;
+    display: block;
+    list-style: none;
+    &:before,&:after{
+      display: table;
+      content: '';
+      clear: both;
+    }
+
+    > li{
+      float: left;
+      width: 100% / @counter;
+    }
+
+    > li:nth-child(@{counter}n + 1){
+      display: table;
+      content: '';
+      clear: both;
+    }
+  }
+}
+
+/*遮罩*/
+.mask(@z-index: 1, @bg: rgba(0, 0, 0, 0.65), @name: mask){
+  .@{name}{
+    position: fixed;
+    top: 0;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index: @z-index ;
+    background-color: @bg;
+  }
 }
