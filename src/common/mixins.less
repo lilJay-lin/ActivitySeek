@@ -153,6 +153,13 @@
   }
 }
 
+/*文字模糊遮罩 .font-gradient-vertial(rgba(249, 249, 249, 0.6), rgba(249, 249, 249, 1), rgba(249, 249, 249, 1),rgba(249, 249, 249, 1))*/
+.font-gradient-vertical(@start, @second, @third, @forth){
+  .font-gradient-vertical{
+    background-image: linear-gradient(to bottom, @start, @second, @third, @forth);
+  }
+}
+
 // Reset filters for IE
 //
 // When you need to remove a gradient background, do not forget to use this to

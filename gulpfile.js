@@ -3,7 +3,7 @@
 
 'use strict';
 
-var browserSync = require('browser-sync'),
+var browserSync = require('browser-sync').create(),
     path = require('path'),
     gulp = require('gulp'),
     del = require('del'),
@@ -89,10 +89,13 @@ gulp.task('appServer',function(){
      dir + '/!**!/!*.*'
      ];*/
 
-    browserSync({
+    browserSync.init({
         server: {
             baseDir: dir
-        }
+        },
+        //port: '3300',
+        open: false,
+        browser: ['google chrome']
     });
 
     //gulp.watch(config.build.less, ['less-watch']);
@@ -115,7 +118,7 @@ gulp.task('js-watch', ['build:js'], browserSync.reload);
 
 gulp.task("build:js", function(){
     return gulp.src(config.build.js,{sourcemaps: true})
-        .pipe($.if(!isProduction, $.watch(config.build.js)))
+        //.pipe($.if(!isProduction, $.watch(config.build.js)))
         .pipe($.plumber({errorHandler: function (err) {
             // 处理编译less错误提示  防止错误之后gulp任务直接中断
             // $.notify.onError({
@@ -135,14 +138,14 @@ gulp.task("build:js", function(){
         //.pipe($.rev()) //添加MD5
         .pipe($.plumber.stop())
         .pipe(gulp.dest(config.dist.js))
-        .pipe(browserSync.reload({stream:true}))
+        .pipe(browserSync.stream())
         .pipe($.size({showFiles: true, title: 'uglify'}))
         .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
 gulp.task("build:less", function(){
     return gulp.src(config.build.less)
-        .pipe($.if(!isProduction, $.watch(config.build.less)))
+        //.pipe($.if(!isProduction, $.watch(config.build.less)))
         .pipe($.plumber({errorHandler: function (err) {
             console.log(err);
             //this.emit('end');
@@ -155,7 +158,7 @@ gulp.task("build:less", function(){
             baseDir: path.join(__dirname, pth + '/base64/'),
             extensions: ['svg', 'png', /\.jpg#datauri$/i],
             exclude:    [/\.server\.(com|net)\/dynamic\//, '--live.jpg'],
-            maxImageSize: 4*1024, // bytes
+            maxImageSize: 8*1024, // bytes
             /*debug: false*/
         }))
         .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
@@ -163,7 +166,7 @@ gulp.task("build:less", function(){
         .pipe($.if(isProduction, $.minifyCss({noAdvanced: true})))
         .pipe($.plumber.stop())
         .pipe(gulp.dest(config.dist.css))
-        .pipe(browserSync.reload({stream:true}))
+        .pipe(browserSync.stream())
         .pipe($.size({showFiles: true, title: 'minified'}))
         .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
@@ -186,25 +189,30 @@ gulp.task('build:all', function(cb){
 
 gulp.task('build:html', function(){
     return gulp.src(config.build.html)
-        .pipe($.if(!isProduction, $.watch(config.build.html)))
+        //.pipe($.if(!isProduction, $.watch(config.build.html)))
         .pipe(changed(config.dist.html, {extension: '.html'}))
         .pipe(gulp.dest(config.dist.html))
         .pipe(browserSync.reload({stream:true}));
 });
 gulp.task('build:img', function(){
     return gulp.src(config.build.img)
-        .pipe($.if(!isProduction, $.watch(config.build.img)))
-        .pipe(gulp.dest(config.dist.img));
+        //.pipe($.if(!isProduction, $.watch(config.build.img)))
+        .pipe(changed(config.dist.img, {extension: '.png'}))
+        .pipe(changed(config.dist.img, {extension: '.jpg'}))
+        .pipe(gulp.dest(config.dist.img))
+        .pipe(browserSync.stream());;
 });
 gulp.task('build:font', function(){
     return gulp.src(config.build.font)
-        .pipe($.if(!isProduction, $.watch(config.build.font)))
-        .pipe(gulp.dest(config.dist.font));
+        //.pipe($.if(!isProduction, $.watch(config.build.font)))
+        .pipe(gulp.dest(config.dist.font))
+        .pipe(browserSync.stream());;
 });
 gulp.task('build:vendor', function(){
     return gulp.src(config.build.vendor)
-        .pipe($.if(!isProduction, $.watch(config.build.vendor)))
-        .pipe(gulp.dest(config.dist.vendor));
+        //.pipe($.if(!isProduction, $.watch(config.build.vendor)))
+        .pipe(gulp.dest(config.dist.vendor))
+        .pipe(browserSync.stream());;
 });
 
 gulp.task('copy:js', function(){
@@ -216,11 +224,41 @@ gulp.task('copy:js', function(){
 
 gulp.task('copy', [ 'copy:js']);
 
-/*gulp.task('watch', function(){
- gulp.watch(config.build.less, ['build:less']);
- gulp.watch(config.build.js, ['build:js']);
- gulp.watch(config.build.html, ['copy']);
- });*/
+gulp.task('watch', function(){
+    function fn(glob, task){
+     var watch = gulp.watch(glob, function(evt){
+         gulp.start(task);
+     });
+    }
+    [
+        {
+            glob: config.build.less,
+            task: 'build:less'
+        },
+        {
+            glob: config.build.js,
+            task: 'build:js'
+        },
+        {
+            glob: config.build.html,
+            task: 'build:html'
+        },
+        {
+            glob: config.build.img,
+            task: 'build:img'
+        },
+        {
+            glob: config.build.vendor,
+            task: 'build:vendor'
+        },
+        {
+            glob: config.build.font,
+            task: 'build:font'
+        },
+    ].forEach(function(item){
+        fn(item.glob, item.task)
+    });
+});
 
 gulp.task("clean", function(cb){
     return del([
@@ -318,6 +356,7 @@ gulp.task('default',function(cb){
         'clean',
         'copy',
         ['appServer', 'build:all'],
+        'watch',
         cb
     )
 });
@@ -327,6 +366,7 @@ gulp.task('build',function(cb){
         'clean',
         'copy',
         'build:all',
+        'watch',
         cb
     )
 });

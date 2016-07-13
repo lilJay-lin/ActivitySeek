@@ -41,7 +41,6 @@
             touch.x1 = e.touches[0].pageX;
             touch.y1 = e.touches[0].pageY;
             touch.last = now;
-            console.log('sss');
             if (!touch.el.data("ignore-pressed")){
                 touch.el.addClass("pressed");
             }

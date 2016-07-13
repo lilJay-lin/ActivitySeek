@@ -1,0 +1,62 @@
+/*
+  按钮 mixins
+*/
+
+.button(@width, @height, @color: #092eff, @font: 0.32rem){
+  .size(@width, @height);
+  line-height:@height;
+  text-align: center;
+  .font(@font, @color);
+  background-color: #fff;
+  border: 1px solid @color;
+  border-radius: 1000px;
+}
+
+
+/*客户端原下载按钮样式*/
+.btnStyle(@color: #65bc08, @border: #65bc08, @background: #fff, @touch: #efffda){
+  .size(1rem, 0.45rem);
+  .font(0.24rem, @color);
+  outline:0;
+  border:1px solid  @border;
+  background-color: @background;
+  &.pressed{
+    background: @touch;
+  }
+}
+
+/*下载*/
+.listbtn-1(){
+  .listbtn-1{
+    .btnStyle();
+  }
+}
+/*打开*/
+.listbtn-2(){
+  .listbtn-2{
+    .btnStyle();
+  }
+}
+/*安装 更新*/
+.listbtn-4(){
+  .listbtn-4{
+    .btnStyle(#fd9b7d, #fd9b7d, #fff,  #ffdbd4);
+  }
+}
+/*.listbtn-4(){
+  .listbtn-4{
+    .btnStyle(#f7c58c, #f9bc76, #fff,  #ffefdb);
+  }
+}*/
+/*已安装*/
+.listbtn-3(){
+  .listbtn-3{
+    .btnStyle();
+  }
+}
+/*免流量更新*/
+.listbtn-6(){
+  .listbtn-6{
+    .btnStyle(#f7c58c, #f9bc76, #fff,  #ffefdb);
+  }
+}
