@@ -93,7 +93,7 @@ gulp.task('appServer',function(){
         server: {
             baseDir: dir
         },
-        //port: '3300',
+        port: '3300',
         open: false,
         browser: ['google chrome']
     });
@@ -147,8 +147,8 @@ gulp.task("build:less", function(){
     return gulp.src(config.build.less)
         //.pipe($.if(!isProduction, $.watch(config.build.less)))
         .pipe($.plumber({errorHandler: function (err) {
-            console.log(err);
-            //this.emit('end');
+            //console.log(err);
+            this.emit('end');
         }}))
         .pipe(changed(config.dist.css, {extension: '.css'}))
         .pipe($.less({
@@ -197,10 +197,10 @@ gulp.task('build:html', function(){
 gulp.task('build:img', function(){
     return gulp.src(config.build.img)
         //.pipe($.if(!isProduction, $.watch(config.build.img)))
-        .pipe(changed(config.dist.img, {extension: '.png'}))
-        .pipe(changed(config.dist.img, {extension: '.jpg'}))
+/*        .pipe(changed(config.dist.img, {extension: '.png'}))
+        .pipe(changed(config.dist.img, {extension: '.jpg'}))*/
         .pipe(gulp.dest(config.dist.img))
-        .pipe(browserSync.stream());;
+        .pipe(browserSync.stream());
 });
 gulp.task('build:font', function(){
     return gulp.src(config.build.font)
@@ -323,7 +323,6 @@ function createHtmlTemplate(pth){
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <meta http-equiv="Cache-Control" content="no-transform"/>
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <meta name="format-detection" content="telephone=no"/>
@@ -331,7 +330,7 @@ function createHtmlTemplate(pth){
     <meta content="yes" name="apple-touch-fullscreen"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <title></title>
-    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,rem,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=(rem=n/d)+"px"};n.px2rem=function(px){var v=parseFloat(px);return v/rem;};n.rem2px=function(r){var v=parseFloat(r);return rem*v};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+    <script>!function(n){var e=n.document,t=e.documentElement,dpr,scale;var isAndroid=n.navigator.appVersion.match(/android/gi),isIPhone=n.navigator.appVersion.match(/iphone/gi),devicePixelRatio=n.devicePixelRatio;if(isIPhone){if(devicePixelRatio>=2&&(!dpr||dpr>=2)){dpr=2}else{dpr=1}}else{dpr=1}scale=1/dpr;var metaEl=e.createElement("meta");var scale=dpr===1?1:0.5;metaEl.setAttribute("name","viewport");metaEl.setAttribute("content","initial-scale="+scale+", maximum-scale="+scale+", minimum-scale="+scale+", user-scalable=no");if(t.firstElementChild){t.firstElementChild.appendChild(metaEl)}else{var wrap=e.createElement("div");wrap.appendChild(metaEl);e.write(wrap.innerHTML)}var i=1440,d=i/200,rem,o="orientationchange" in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>i&&(n=i),t.style.fontSize=(rem=n/d)+"px"};n.px2rem=function(px){var v=parseFloat(px);return v/rem};n.rem2px=function(r){var v=parseFloat(r);return rem*v};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
 </head>
 <body>
     hell world!
