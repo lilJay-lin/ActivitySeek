@@ -1,18 +1,40 @@
-@standard-min-width: 320px;
-@standard-width: 720px;
-@standard-font-size: 100px;
+@standard-min-width: 280px;
+@standard-width: 1440px;
+@standard-font-size: 200px;
 @standard-step-width: 40px;
+/*
+  不使用device-width,1080p之类device-width太大，使用viewpory layout width
+  720 100标准
+  使用大一倍的 1440 200
+  devicePixelRatio >=2 , meta init-scale = 0.5
+*/
 .queryMedia(@width) when ( @width >= @standard-min-width) and (@width <= @standard-width){
-  @media only screen and (min-device-width: @width){
+  @media only screen and (min-width: @width){
     html{
       font-size: @width * @standard-font-size / @standard-width ;
     }
   }
-  @media only screen and (min-device-width: @width) and (-webkit-device-pixel-ratio: 2){
+/*  @media only screen and (min-width: @width) and (-webkit-min-device-pixel-ratio: 2){
+    html{
+      font-size: @width * @standard-font-size * 2 / @standard-width ;
+    }
+  }*/
+  .queryMedia(@width + @standard-step-width);
+}
+
+.queryMediaSpecial(@width){
+  @media only screen and (device-width: @width) and (-webkit-min-device-pixel-ratio: 2){
     html{
       font-size: @width * @standard-font-size * 2 / @standard-width ;
     }
   }
-  .queryMedia(@width - @standard-step-width);
 }
-.queryMedia(@standard-width);
+.queryMedia(@standard-min-width);
+
+/*
+  针对IPHONE手机做处理
+*/
+.queryMediaSpecial(375px);
+.queryMediaSpecial(414px);
+.queryMediaSpecial(475px);
+.queryMediaSpecial(768px);
