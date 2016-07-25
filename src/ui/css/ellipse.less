@@ -1,0 +1,81 @@
+@import "base.less";
+/*
+  文字溢出处理
+*/
+.introduce{
+  overflow: hidden;
+  margin-bottom: 0.2rem;
+  background-color: #fff;
+}
+
+.introduce-hd{
+  .font(0.3rem, #333333);
+  padding: 0.3rem 0 0.18rem 0.2rem;
+}
+
+.introduce-bd{
+  overflow: hidden;
+  //padding-bottom: 0.3rem;
+}
+
+@ellipse-line-height: 0.38rem;
+.ellipse{
+  position: relative;
+  .font(0.28rem, #999999, @ellipse-line-height);
+  &.active{
+    & .ellipse-clip{
+      display: none;
+    }
+    & .ellipse-original{
+      display: block;
+      padding-bottom: @ellipse-line-height;
+    }
+
+    & .ellipse-btn{
+      &:after{
+        position: absolute;
+        right:0;
+        width: 0.35rem;
+        height: @ellipse-line-height;
+        content: '';
+        background: url('../img/retract.png') 30% 50% no-repeat;
+        background-size: 0.24rem auto;
+      }
+    }
+  }
+}
+.ellipse-clip{
+  width: 100%;
+  .line-clamp(2, @ellipse-line-height);
+}
+.ellipse-original{
+  display: none;
+}
+
+.ellipse-btn{
+  position: absolute;
+  .font(0.28rem, #657add, @ellipse-line-height);
+  .size(2rem, @ellipse-line-height);
+  right: 0;
+  bottom: 0;
+  text-align: right;
+  padding-right: 0.45rem;
+  .gradient-horizontal(rgba(255,255,255,.8), rgba(255,255,255,1), 20%, 40%);
+  &:after{
+    position: absolute;
+    right:0;
+    width: 0.35rem;
+    height: @ellipse-line-height;
+    content: '';
+    background: url('../img/extend.png') 30% 50% no-repeat;
+    background-size: 0.24rem auto;
+  }
+}
+.sliders-wrapper{
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background-color: #f1f2f6;
+  padding: 0.15rem 0;
+  visibility: hidden;
+}

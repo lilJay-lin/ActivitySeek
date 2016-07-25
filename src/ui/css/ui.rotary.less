@@ -1,0 +1,65 @@
+/* ==========================================================================
+   Component: rotary
+ ============================================================================ */
+@import 'base.less';
+@ns: zw-;
+.@{ns}rotary-page{
+ min-height: 100%;
+}
+.@{ns}rotary{
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  .size(5.3rem, 5.3rem)
+}
+.@{ns}rotary-indicator{
+  position: absolute;
+  top:50%;
+  left:50%;
+  width: 1.9rem;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+/*
+.@{ns}rotary-info{
+  padding-top: 0.15rem;
+  padding-bottom: 0.1rem;
+  text-align: center;
+  color:#fff;
+  font-size: 0.26rem;
+}
+.@{ns}rotary-times{
+  color: #ffe93b;
+}*/
+
+.@{ns}rotary-dial{
+  backface-visibility: hidden;
+  perspective: 1000;
+  transition-delay: 0.2s;
+  transition-property: transform;
+  transition-timing-function: cubic-besizer(.43,1.18,.53,.36);
+  transition-duration: 2s;
+}
+
+/*
+.@{ns}rotary-btn{
+  width: 4.83rem;
+  height: 0.9rem;
+  padding-bottom: 0.1rem;
+  line-height: 0.8rem;
+  vertical-align: middle;
+  margin: 0 auto;
+  text-align: center;
+  color: #df5a00;
+  font-size:0.34rem;
+  font-weight: bold;
+  background: url("../img/18.png") no-repeat;
+  background-size: 100% auto;
+  background-position: 0 100%;
+  overflow: hidden;
+
+  &.disable{
+    color:#9b9b9b;
+    background-position: 0 0;
+  }
+}*/

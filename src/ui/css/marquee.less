@@ -1,0 +1,35 @@
+@ns: zw-;
+@shows-height: 0.5rem;
+.@{ns}marquee{
+  height: @shows-height;
+  overflow: hidden;
+  color:#fff;
+  font-size: 0.24rem;
+  margin: 0.26rem 0.2rem;
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 1000px;
+  ul{
+    backface-visibility: hidden;
+    perspective: 1000;
+    transition-delay: 0.2s;
+    transition-property: all;
+    //display: block;
+    list-style: none;
+    display: block;
+    overflow: hidden;
+    li{
+      display: block;
+      height: @shows-height;
+      line-height: @shows-height;
+      padding:0 0.2rem;
+    }
+  }
+  &.inline{
+    ul {
+      margin-left: 100%;
+      li{
+        float: left;
+      }
+    }
+  }
+}

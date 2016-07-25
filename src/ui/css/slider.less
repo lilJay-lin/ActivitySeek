@@ -1,0 +1,52 @@
+/*
+
+*/
+@import "base.less";
+body{
+  background-color: #000;
+}
+@slider-height: 5.24rem;
+.container-wrapper{
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding-bottom: 0.6rem;
+}
+.container{
+  list-style: none;
+  display: block;
+  overflow:hidden;
+  height: @slider-height;
+  backface-visibility: hidden;
+  > li{
+    width:100%;
+    height: 100%;
+    display: block;
+    float: left;
+    backface-visibility: hidden;
+    height: @slider-height;
+    transition: transform 1s linear;
+  }
+}
+
+.director{
+  position: absolute;
+  bottom: 0.15rem;
+  left:50%;
+  transform: tranlslate3d(-50%, 0, 0);
+  list-style: none;
+  > li{
+    display: block;
+    float: left;
+    border-radius: 1000px;
+    width: 0.2rem;
+    height: 0.2rem;
+    border: 1px solid #fff;
+    & + li{
+      margin-left: 0.1rem;
+    }
+    &.active{
+      background-color: #0090ff;
+    }
+  }
+}

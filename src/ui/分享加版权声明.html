@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title></title>
+    <script>!function (n) {
+        var e = n.document, t = e.documentElement, i = 720, d = i / 100, rem, o = "orientationchange"in n ? "orientationchange" : "resize", a = function () {
+            var n = t.clientWidth || 320;
+            n > 720 && (n = 720), t.style.fontSize = (rem = n / d) + "px"
+        };
+        n.px2rem = function (px) {
+            var v = parseFloat(px);
+            return v / rem;
+        };
+        n.rem2px = function (r) {
+            var v = parseFloat(r);
+            return rem * v
+        };
+        e.addEventListener && (n.addEventListener(o, a, !1), e.addEventListener("DOMContentLoaded", a, !1))
+    }(window);</script>
+</head>
+<body>
+<div class="share-wrap">
+    <img src="img/priv_bar.png" alt=""/>
+    <div class="share-box">
+        <div class="share-priv">
+            <img src="img/priv_detail.png" alt=""/>
+            <a href="javascript:void(0)" class="priv-close-btn"></a>
+        </div>
+        <div class="share">
+            <img src="img/priv_bar.jpg" alt=""/>
+            <a href="javascript:void(0)" class="share-btn"></a>
+            <a href="javascript:void(0)" class="share-priv-btn"></a>
+        </div>
+    </div>
+</div>
+</body>
+<script src="vendor/jquery.min.js"></script>
+<script src="js/share.js"></script>
+<script>
+    $(function(){
+        new Share({
+            isMG: 0,//是否是咪咕
+            shareBtn: '.share-btn', //分享按钮
+            privBtn: '.share-priv-btn',//查看版权按钮
+            privMsg: '.share-priv', //版权信息DIV
+            privCloseBtn: '.priv-close-btn', //版权信息关闭按钮
+            shareIcon: 'img/7.png',//分享ICON
+            shareUrl: '',//分享URL
+            shareTitle: '',//分享标题
+            shareDesc: ''//分享描述
+        })
+    })
+</script>
+</html>

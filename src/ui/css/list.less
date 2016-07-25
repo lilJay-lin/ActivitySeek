@@ -1,0 +1,96 @@
+
+.recommend-item{
+  display: flex;
+  align-items: center;
+  padding: 0.2rem 0;
+  + .recommend-item{
+    border-top: 1px solid #e5e5e5;
+  }
+  > img{
+    display: block;
+    border-radius: 0.1rem;
+    margin-right: 0.25rem;
+  }
+}
+.recommend-item-music{
+  > img:nth-of-type(1){
+    .size(1.48rem, 1.48rem);
+  }
+  > a{
+    display: block;
+    overflow: hidden;
+    width: 0.38rem;
+    margin-right: 0.06rem;
+  }
+}
+.recommend-item-video{
+  > img:nth-of-type(1){
+    .size(2.38rem, 1.48rem);
+  }
+
+  > a{
+    display: block;
+    overflow: hidden;
+    width: 0.48rem;
+  }
+}
+.recommend-item-book{
+  > img:nth-of-type(1){
+    .size(1.48rem, 1.85rem);
+  }
+
+  > a{
+    display: block;
+    overflow: hidden;
+    width: 0.41rem;
+    margin-right: 0.04rem;
+  }
+}
+.recommend-item-info{
+  flex: 1;
+  >p{
+    width: 4rem;
+    .text-overflow();
+  }
+  > p:nth-child(1) {
+    .font(0.3rem, #333333);
+    margin-bottom: 0.08rem;
+  }
+  > p:nth-child(2) {
+    .font(0.26rem, #999999);
+  }
+}
+.recommend-item-video {
+  .recommend-item-info {
+    > p {
+      width: 3.1rem;
+    }
+  }
+}
+.recommend-items{
+  display: flex;
+  padding: 0.2rem 0 0.27rem;
+}
+.recommend-item-unit{
+  display: block;
+  width: 25%;
+  text-align: center;
+  > img:nth-of-type(1){
+    .size(1.48rem, 1.48rem);
+    border-radius: 0.1rem;
+  }
+  > p:nth-of-type(1){
+    .font(0.26rem, #333333);
+    margin: 0.08rem 0 0.17rem;
+    .text-overflow();
+  }
+  a {
+    display: block;
+    width:1.2rem;
+    .font(0.28rem, #00c6ff);
+    line-height: 0.54rem;
+    border-radius: 1000px;
+    border: 1px solid #00c6ff;
+    margin: 0 auto;
+  }
+}

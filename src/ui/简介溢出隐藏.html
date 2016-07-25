@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title>复用UI</title>
+    <link rel="stylesheet" href="css/layout.css"/>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+</head>
+<body>
+    <div class="introduce">
+        <div class="introduce-hd">
+            简介
+        </div>
+        <div class="introduce-bd">
+            <div class="ellipse">
+                <div class="ellipse-clip">
+                    在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方
+                </div>
+                <div class="ellipse-original">
+                    在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方在布满水淀粉收来了康师傅的水电费水电费水电费水电费第三方
+                </div>
+                <div class="ellipse-btn"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="vendor/jquery.min.js"></script>
+<script>
+    $(function(){
+        /*简介文字溢出处理*/
+        var $ellipse = $('.ellipse'),
+                $ellipseBtn = $('.ellipse-btn');
+        var clipH = $ellipse.find('.ellipse-clip').outerHeight(),
+                orgH = $ellipse.find('.ellipse-original').outerHeight();
+        if(clipH == orgH){
+            $ellipseBtn.css('opacity', '0')
+        }
+        $ellipseBtn.on('click', function(e){
+            e.stopPropagation();
+            $ellipse.toggleClass('active');
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,28 @@
+@import 'mixins.less';
+/*垂直居中*/
+.title-bar{
+  font-size: 0;
+  color: #0092ff;
+  height: 0.65rem;
+  text-align: left;
+  &:before{
+    display: inline-block;
+    vertical-align: middle;
+    content:'';
+    height: 100%;
+  }
+  &> span{
+    display: inline-block;
+    margin: 0 0.1rem;
+    .size(0.24rem, 0.24rem);
+    .background('../base64/alert.png');
+    vertical-align: middle;
+  }
+  &> div{
+    font-size:  0.18rem;
+    vertical-align: middle;
+    .text-overflow();
+    display: inline-block;
+    width: 5rem; /*单行溢出需要限制宽度*/
+  }
+}

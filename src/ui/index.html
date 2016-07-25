@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title>复用UI</title>
+    <link rel="stylesheet" href="css/ui.css"/>
+    <link rel="stylesheet" href="css/layout.css"/>
+    <link rel="stylesheet" href="css/table.css"/>
+    <link rel="stylesheet" href="css/middle.css"/>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+</head>
+<body>
+    <div class="ui">
+        <div class="ui-left">
+            <ul>
+                <li><a href="#layout">布局相关</a></li>
+                <li><a href="#table">表单相关</a></li>
+                <li><a href="#middle">垂直居中</a></li>
+            </ul>
+        </div>
+        <div class="ui-right">
+            <p id="layout" class="ui-title">布局相关</p>
+            <p class="ui-sub-title">置顶头部</p>
+            <div class="example" style="display: none;height:4rem;width:100%;position: relative;">
+                <header>
+                    <div class="float">
+                        <a href="javascript:void(0);" class="go-back"></a>
+                        <h1>申请退款</h1>
+                    </div>
+                </header>
+            </div>
+            <p class="ui-sub-title">置底底部</p>
+
+            <div class="example" style="display:none;height:4rem;width:100%;position: relative;">
+                <footer >
+                    <div class="float">
+                        <a href="" style="display: inline-block;width:100%;height:0.5rem;background-color: #0092ff;border:1px solid #0092ff;vertical-align: middle;color:#fff;font-size:0.3rem">主页</a>
+                    </div>
+                </footer>
+            </div>
+
+            <p id="table" class="ui-title">表单相关</p>
+            <p class="ui-sub-title">checkbox</p>
+            <div class="example">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" class="checkbox" id="checkbox"/><label for="checkbox" class="checkbox-label">个人</label>
+                </div>
+            </div>
+            <p>输入+图标+按钮</p>
+            <div class="search-box-wrapper">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="请输入搜索的地址"/>
+                    <span class="search-btn">搜索</span>
+                </div>
+            </div>
+
+            <p id="middle" class="ui-title">垂直居中</p>
+            <div class="title-bar">
+                <span></span>
+                <div>单行标题和图标居中，文字溢出</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

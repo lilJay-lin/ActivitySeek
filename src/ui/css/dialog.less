@@ -1,0 +1,52 @@
+@import 'base.less';
+.mask(1, rgba(0, 0, 0, 0.7));
+/*
+  分享弹窗
+*/
+.share-box{
+  position: relative;
+  height: 3.55rem;
+  margin-top: 2.8rem;
+  text-align: center;
+  border-top: 1px solid #ededed;
+  background-color: #ededed;
+}
+.share-close{
+  position: absolute;
+  top:0;
+  right:0;
+  .size(0.6rem, 0.6rem);
+  .font(0.32rem, #9c9c9c)
+}
+
+.share-hd{
+  .font(0.36rem, #000);
+  margin: 0.15rem 0 0;
+}
+.share-bd{
+  margin-top: 0.5rem;
+  display: flex;
+  color:#000;
+  font-size: 0.2rem;
+  padding: 0 0.7rem;
+  &>div{
+    width: 33.333%;
+    text-align: center;
+  }
+}
+.share-wx,.share-fr,.share-qq{
+  margin:0 auto 0.2rem;
+  width: 1.28rem;
+  height: 1.28rem;
+  /*  border-radius: 50%;*/
+  /*  border: 1px solid #f9c80c;*/
+}
+.share-wx{
+  .background('../img/wx.png');
+}
+.share-fr{
+  .background('../img/fr.png');
+}
+.share-qq{
+  .background('../img/qq.png');
+}

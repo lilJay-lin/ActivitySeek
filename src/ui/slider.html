@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title></title>
+    <link rel="stylesheet" href="css/slider.css"/>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+</head>
+<body>
+    <div class="container-wrapper">
+        <ul class="container">
+            <li class="active" style="background-color: #ee8900">
+                <div class="main_img">
+                </div>
+            </li>
+            <li style="background-color: #66b8da">
+                <div class="lrc-box">
+                    <p>我是歌手我是歌手我是歌手我是歌手</p>
+                    <p>我是歌手我是歌手我是歌手我是歌手我是歌手</p>
+                    <p>我是歌手我是歌手我是歌手我是歌手我是歌手我是歌手</p>
+                    <p>我是歌手我是歌手我是歌手我是歌手我是歌手</p>
+                    <p>我是歌手我是歌手我是歌手我是歌手我是歌手我是歌手</p>
+                </div>
+            </li>
+        </ul>
+        <ul class="director">
+            <li class="active"></li>
+            <li></li>
+        </ul>
+    </div>
+</body>
+<script src="vendor/jquery.min.js"></script>
+<script>
+    var move = 0, start = {}, dist = {}, idx = 0, len = 0
+            $container = $('.container'),
+            $main= $('.container-wrapper'),
+            $directors = $('.director').children();
+    var w = $(window).width();
+    var $els = $container.children().width(w);
+    len = $els.length;
+    $container.width(w * $els.length);
+    $main.on('touchstart', function(e){
+        e.preventDefault();
+        if(e.originalEvent){
+            e = e.originalEvent;
+        }
+        start.x = e.touches[0].pageX,
+                move = 1;
+    }).on('touchmove', function(e){
+        if(!move){
+            return;
+        }
+        if(e.originalEvent){
+            e = e.originalEvent;
+        }
+        var x = e.changedTouches[0].pageX;
+        dist.x = x - start.x;
+        setPosition(dist.x + idx * -w, 0);
+    }).on('touchend', function(e){
+        e.preventDefault();
+        move = 0;
+        start = {};
+        if(Math.abs(dist.x) < 50){
+            setPosition(idx * -w, 1000);
+            return;
+        }
+        if(dist.x < 0){
+            idx + 1 < len ? idx++ : idx = len -1;
+        }else{
+            idx - 1 < 0 ? idx = 0 : idx--;
+        }
+        dist.x < 0 ? setPosition(-w * idx , 1000): setPosition(w * idx, 1000);
+        $els.removeClass('active').eq(idx).addClass('active');
+        $directors.removeClass('active').eq(idx).addClass('active')
+    });
+
+    function setPosition(x, d){
+        $container.css({
+            '-webkit-transform': 'translate3d(' + x + 'px, 0, 0)',
+            'transform': 'translate3d(' + x + 'px, 0, 0)',
+            'transition-duration': d / 1000 + 's',
+            ' -webkit-transition-duration': d / 1000 + 's'
+        });
+    }
+</script>
+</html>

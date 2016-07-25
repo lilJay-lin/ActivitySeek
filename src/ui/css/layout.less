@@ -1,0 +1,162 @@
+/*布局相关*/
+/*
+置底底部
+一般主要是防止按钮等元素，需要垂直居中对齐， 设置了font-size:0;height, before
+*/
+@footer-height:1.2rem;
+@footer-z-index: 1;
+footer{
+  display: block;
+  height: @footer-height;
+  & > .float{
+    display: block;
+    position: fixed;
+    bottom:0;left:0;
+    z-index: @footer-z-index;
+    width:100%;
+    text-align: center;
+    background-color: #f0f0f0;
+    font-size: 0 ;
+    height: @footer-height;
+    &:before{
+      display: inline-block;
+      content:'';
+      vertical-align: middle;
+      height: 100%;
+    }
+  }
+}
+/*置顶头部*/
+/*一般只有标题和返回按钮，外层设置了line-height*/
+@header-height:0.97rem;
+@header-z-index: 5;
+header{
+  display: block;
+  height: @header-height;
+  & > .float{
+    z-index: @header-z-index;
+    padding: 0 1.5rem; //左右有返回和小标题 ，无的话去掉
+    width:100%;
+    position: fixed;
+    top:0;left:0;
+    width:100%;
+    background-color:#0092ff;
+    line-height:  @header-height;
+    color:#fff;
+    font-size:0;
+  }
+  & h1{
+    display: block;
+    margin:0;
+    font-size: 0.36rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+.go-back{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 0.5rem;
+  height: @header-height;
+  background-color: #00AA00;
+  background:url('../base64/goback.png') 0.3rem 50% no-repeat;
+  background-size: 0.19rem auto;
+}
+
+.link-to{
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 1.5rem;
+  padding-right:0.3rem;
+  font-size: 0.3rem;
+  vertical-align: middle;
+  color:#fff;
+}
+
+/*
+  分页布局
+*/
+.container{
+  position: relative;
+  display: block;
+  list-style: none;
+  width: 100%;
+  height: 100%;
+  > li{
+    display: block;
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+  }
+}
+
+
+/*
+  平分布局
+*/
+
+
+/*
+  面板
+*/
+
+
+
+/*
+  文字溢出处理
+*/
+.introduce{
+  overflow: hidden;
+  margin-bottom: 0.2rem;
+  background-color: #fff;
+}
+
+.introduce-hd{
+  .font(0.3rem, #333333);
+  padding: 0.3rem 0 0.18rem 0.2rem;
+}
+
+.introduce-bd{
+  overflow: hidden;
+  //padding-bottom: 0.3rem;
+}
+
+
+.ellipse{
+  padding: 0 0.2rem;
+  .font(0.24rem, #777777, 1.5);
+
+  &.active{
+    & .ellipse-clip{
+      display: none;
+    }
+    & .ellipse-original{
+      display: block;
+    }
+
+    & .ellipse-btn{
+      background: url('../img/retract.png') 50% 50% no-repeat;
+      background-size: 0.44rem auto;
+    }
+  }
+}
+.ellipse-clip{
+  width: 100%;
+  .line-clamp(2, 1.5);
+}
+.ellipse-original{
+  display: none;
+}
+
+.ellipse-btn{
+  text-align: center;
+  margin: 0 auto;
+  .size(1rem, 0.6rem);
+  background: url('../img/extend.png') 50% 50% no-repeat;
+  background-size: 0.44rem auto;
+}

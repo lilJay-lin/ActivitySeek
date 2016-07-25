@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title></title>
+    <link rel="stylesheet" href="css/tab.css"/>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+</head>
+<body>
+<div class="tabs-wrapper">
+    <ul class="tab">
+        <li class="active" data-name="recommend">
+            <span>推荐</span>
+        </li>
+        <li  data-name="china">
+            <span>中国</span>
+        </li>
+        <li  data-name="schedule">
+            <span>赛程</span>
+        </li>
+        <li  data-name="rank">
+            <span>排行榜</span>
+        </li>
+        <li  data-name="tour">
+            <span>巡礼</span>
+        </li>
+    </ul>
+    <ul class="tab-content">
+        <li data-name="recommend" class="active">
+        </li>
+        <li data-name="china">
+        </li>
+        <li data-name="schedule">
+            <iframe class="js-schedule" src="http://www.baidu.com" frameborder="0"></iframe>
+        </li>
+        <li data-name="rank">
+        </li>
+        <li data-name="tour">
+        </li>
+    </ul>
+</div>
+</body>
+<script src="vendor/jquery.min.js"></script>
+<script src="js/tab.js"></script>
+<script>
+    $(function(){
+        /*
+         * 初始化tab
+         */
+        new Tab({
+            el: '.tabs-wrapper'
+        });
+    })
+</script>
+</html>

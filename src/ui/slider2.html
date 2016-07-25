@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title></title>
+    <link rel="stylesheet" href="css/pageSlider.css"/>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+</head>
+<body>
+    <ul class="container">
+        <li class="active" style="background-color: #ee8900">
+            w1
+        </li>
+        <li style="background-color: #66b8da">
+            ee2
+        </li>
+        <li style="background-color: #00ff00">
+            ee33
+        </li>
+        <li style="background-color: #e2220a">
+            er44
+        </li>
+    </ul>
+</body>
+<script src="vendor/jquery.min.js"></script>
+<script>
+    var $container = $('.container'),
+            $sliders = $container.children();
+    var idx = 0,pendIdx = 0, len = $sliders.length, h = $container.height();
+    var isMove = 0, delta = {}, move = {},
+            locked = 0 /*滚动期间锁定*/;
+    $container.on('touchstart', function(e){
+        if(locked) return;
+        if(e.originalEvent){
+            e = e.originalEvent;
+        }
+        e = e.touches[0];
+        isMove = 1;
+        move={
+            x: e.pageX,
+            y: e.pageY
+        };
+    });
+    $container.on('touchmove', function(e){
+        e.preventDefault();
+        if(!isMove || locked) return;
+        if(e.originalEvent){
+            e = e.originalEvent;
+        }
+        if(e.changedTouches.length > 0){
+            e = e.changedTouches[0];
+        }
+
+        delta={
+            x: e.pageX,
+            y: e.pageY
+        };
+        var d = delta.y - move.y;
+        var data = d < 0 ? {
+            idx: getIndex(idx + 1),
+            class: 'next pending'
+        } : {
+            idx: getIndex(idx - 1),
+            class: 'previous pending'
+        };
+        pendIdx = data.idx;
+        var $el = $sliders.eq(pendIdx);
+        $el.addClass(data.class);
+        setTransition($el, d, 0);
+    });
+    $container.on('touchend', function(e){
+        if(e.originalEvent){
+            e = e.originalEvent;
+        }
+        if(locked) return;
+        if(delta.y == void 0){
+            return;
+        }
+        locked = 1;
+        var d = delta.y - move.y;
+        var data = d > 0 ?  pre() : next();
+        move = {};
+        isMove = 0;
+        delta = {};
+    });
+
+    /*动画检测*/
+    var body = document.body || document.documentElement;
+    var style = body.style;
+    var  transitionEnd=(function(){
+        var transEndEventNames = {
+            transition       : 'transitionend',
+            WebkitTransition : 'webkitTransitionEnd',
+            MozTransition    : 'transitionend',
+            OTransition      : 'oTransitionEnd otransitionend'
+        };
+        for(var name in transEndEventNames){
+            if(typeof style[name] === "string"){
+                return transEndEventNames[name]
+            }
+        }
+		return '';
+    })();
+    function next(){
+        var index = getIndex(idx + 1);
+        var $el = $sliders.eq(index);
+        $el.addClass('next pending');
+        setPosition($el, -h);
+        idx = index;
+    }
+    function pre(){
+        var index = getIndex(idx - 1);
+        var $el = $sliders.eq(index);
+        $el.addClass('previous pending');
+        setPosition($sliders.eq(index), h);
+        idx = index;
+    }
+    function getIndex(index){
+        return index < 0 ? len - 1 : (index < len ? index : 0 );
+    }
+    function setPosition($el, y, d){
+        var d = d || 1;
+        setTransition($el, y, d);
+		function cb(){
+            locked = 0;
+            var $preEl = $container.find('.active');
+            $preEl.removeClass('active').removeClass('pre').removeClass('next');
+            setTransition($preEl, 0, 0);
+            $el.addClass('active').removeClass('pending');
+		}
+		if(transitionEnd == ''){
+			setTimeout(cb, d * 1000);
+		}else{
+			$el.one(transitionEnd, cb);
+		}
+    }
+    function setTransition($el, y, d){
+        $el.css({
+            '-webkit-transform': 'translate3d( 0, ' + y + 'px, 0)',
+            'transform': 'translate3d( 0, ' + y + 'px, 0)',
+            'transition-duration': d + 's',
+            ' -webkit-transition-duration': d + 's'
+        });
+    }
+</script>
+</html>

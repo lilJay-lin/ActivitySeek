@@ -1,0 +1,148 @@
+<!---页面html片段，分享遮罩--->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title>疯狂猜电影</title>
+    <style>
+	/*
+	  微信分享
+	*/
+	.zw-mask-tips {
+	  display: none;
+	  position: fixed;
+	  top:0;
+	  left:0;
+	  bottom:0;
+	  right:0;
+	  background-color: rgba(0,0,0,0.5);
+	  z-index: 100;
+	}
+	.zw-arrow-line {
+	  width: 2.40rem;
+	  height: 2.47rem;
+	  position: absolute;
+	  right: 0.8rem;
+	  top: 0;
+	}
+	.zw-arrow-line img {
+	  width: 2.40rem;
+	  height: 2.47rem;
+	}
+	.zw-tips-text {
+	  margin-top: 2.55rem;
+	  font-size: 0.32rem;
+	  color: #ffffff;
+	}
+	.zw-tips1 {
+	  text-align: center;
+	}
+	.zw-tips2 {
+	  margin-top: 0.15rem;
+	  text-align: center;
+	}
+	</style>
+    <script>!function(n){var e=n.document,t=e.documentElement,i=720,d=i/100,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>720&&(n=720),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+</head>
+<body>
+    <div class="zw-mask-tips">
+        <div class="zw-arrow-line">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAAD3AQMAAAAZnktpAAAABlBMVEUAAAD///+l2Z/dAAAAAXRSTlMAQObYZgAAAn9JREFUWMPtmT2OGzEMhSlMoc66wGJ1jS0Mz5W2dGFk1OVaA+QiOoK6qBhY2Y2RUDY5zwUReLzIVAY+m+QjqR+OCTwuE8QV4wYxjdh6aBbr04htT9B0q/DHPwrArfh5nfpGMYGcVBpRYIlOwPZC9LaOI853S4gOCy5WwaVOEJ8hHSrEHsuK2PUEKWHVA1YdZktkB0tkrtzJmSlwsgReLYEPGeuasa4E8SukdHpWXZZ62WUbDpgBy/ZYdiBDtY1ZOWJszMpmk3YH701Je3/WnHrabMrfbG38DyviZlPB0uMKtjMV7MVWz8etMMp38Ga7YcPNYuylh7WavRMx3mwfm9sc4wcuku9wKh7ax7MuLn7i82rgn5Z9y/BNwLis4PHnxUZase0v3yoq9vWCvW49Zo+m44k8mK3dQuGPF811oR0YgONMOzA+j/QXB8X5wliZn11lrDj3mbHiPCTGivORGCvOvzHWxth6hUdt4mYckzInMfZZBM5YDieRGCuxHW7wQQTOWMTmCmNlxh7yDR6y0NVjV4SuHlMVuq7w/kYXY3msnAQOV7IF9knE6Ve2oSEL7HIvW2AqvWyII0l8FCJ90vOyV3bFl84QYy1tRcG7XqPckYOoveuxZzxD7BM7kZjd9HhIQkNR8QFizt+7io/8QcOFzSjYqdgn0TevPeakQeyT1txBYp+UgoarjhWOXtVVvZdyHMZUiVAqT8oyKNp+5bKCoxThsrZfhcRYeRU6agvdLf1pIxfexMeFhuPMh40oEx+v48ylkX8VuPPKvXkqv31Uzr28friWV7BrZ6LW+tLIq09Zv5x+0DO6nF5Rl7/oW47/Q/PWpuLnLfdX7QYb/gUeHf9S+PGpBwAAAABJRU5ErkJggg==" alt="">
+        </div>
+        <div class="zw-tips-text">
+            <div class="zw-tips1">点击右上角</div>
+            <div class="zw-tips2">选择从浏览器中打开</div>
+        </div>
+    </div>
+</body>
+<!---javsscript代码---->
+<script src="vendor/jquery.min.js"></script>
+<script src="vendor/mgapp.js"></script>
+<script>
+    /*此处PPS填写客户端表示，是客户端为1，非客户端为0*/
+    var isMG = 0;
+</script>
+<script>
+   $(function(
+		/*咪咕调起失败是下载咪咕APP*/
+		mg.error(function(){
+			window.location.href = '此处填写咪咕APP下载地址';
+		});
+		/*判断某一操作能不能用客户端打开（$actionButn为点击的按钮）：微信弹窗提示使用浏览器打开，非微信判断是否安装咪咕，未安装则下载*/
+		var $actionButn = $('点击的按钮节点');
+        $actionButn.on('click', function(e){
+			e.preventDefault();
+            if(isWeChat()){
+                showShareMask(tips[0]);
+                return;
+            }else if(isIos()){
+                showShareMask(tips[3]);
+				return;
+			}
+            mg.open($(this).data('url')); //此处写需要打开的页面，我这里是取当前节点的data-url属性
+        });
+
+	   /*弹窗点击隐藏*/
+        var $mask = $('.zw-mask-tips');
+        $mask.on('click', function(){
+            $mask.hide();
+        });
+
+		/*判断是否微信*/
+        function isWeChat(){
+            var ua = navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                return 1;
+            }
+            return 0;
+        };
+		
+		/*判断是否IOS*/
+		function isIos(){
+            var ua = navigator.userAgent.toLowerCase();
+		    return /iphone|ipad|ipod/.test(ua);
+		};
+        /*
+			分享，点击分享按钮判断：
+		    1. 微信，弹遮罩引导
+			2. 浏览器，弹遮罩提示
+			3. 客户端，使用js接口分享
+		*/
+		var $shareBtn  = $('点击触发分享的按钮节点'); 
+        $shareBtn.on('touchstart', function(e){
+            e.preventDefault();
+            if(isWeChat()){
+                showShareMask(tips[1]);
+            }else if(isMG){
+                /*客户端分享,PPS填充url，标题名，描述;*/
+                window.migu.shareUrlToWxFriends('url', '标题名', '描述');
+            }/*else if(isIos()){
+                showShareMask(tips[3]);
+			}*/else{
+                showShareMask(tips[2]);
+            }
+        });
+		
+        var tips = ['选择从浏览器中打开', '选择分享到朋友圈', '请使用浏览器分享功能', '咪咕Zone暂不支持IOS系统，敬请期待']
+        function showShareMask(txt){
+            if(isWeChat()){
+                $mask.find('.zw-tips1').show();
+                $mask.find('.zw-tips2').text(txt);;
+                $mask.find('.zw-arrow-line').show();
+            }else{
+                $mask.find('.zw-tips1').hide();
+                $mask.find('.zw-tips2').text(txt);;
+                $mask.find('.zw-arrow-line').hide();
+            }
+            $mask.show();
+        };
+
+    });
+</script>

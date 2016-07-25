@@ -1,0 +1,92 @@
+/*表单相关*/
+/*
+checkbox
+*/
+@checkbox-wrapper-height: 0.4rem;
+@checkbox-height: 0.36rem;
+.checkbox-wrapper{
+  font-size: 0;
+  height:@checkbox-wrapper-height; /*整体高度*/
+  &:before{
+    display: inline-block;
+    content:'';
+    vertical-align: middle;
+    height: 100%;
+  }
+}
+
+.checkbox-wrapper input[type=checkbox] {
+  visibility: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}
+.checkbox-label{
+  position: relative;
+  display: inline-block;
+  font-size: .3rem;
+  color: #666666;
+  vertical-align: middle;
+  line-height: @checkbox-height; /*内容高度*/
+  &:before{
+    display: inline-block;
+    content: '';
+    border: 1px solid #c7c7c7;
+    border-radius: 50%;
+    width: .26rem;
+    height: .26rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -.36rem;
+    vertical-align: middle;
+  }
+}
+.checkbox-wrapper input[type=checkbox]:checked + label:before {
+  background: url(../base64/checked.png) 50% 50% no-repeat;
+  background-size: .26rem .26rem;
+  border-width: 0;
+}
+
+/*输入+图标+按钮*/
+.search-box-wrapper{
+  overflow: hidden;
+  background-color: #fff;
+}
+.search-box{
+  border: 1px solid #d7d7d7;
+  margin: 0.2rem;
+  display: flex;
+  height: 0.65rem;
+  padding-left: 0.6rem;
+  background: url(../base64/search.png)  #fff 0.1rem 50% no-repeat;
+  background-size: 0.32rem auto;
+  border-radius:0.1rem;
+}
+.search-input{
+  display: inline-block;
+  flex:1;
+  height: 100%;
+  border:0;
+  outline: 0;
+  font-size:0.26rem;
+  color: #c3c3c3;
+  box-sizing: border-box;
+  border-radius: 0;
+}
+.search-btn{
+  display: inline-block;
+  width: 1.1rem;
+  line-height:0.65rem;
+  color: #fff;
+  font-size: 0.28rem;
+  border:1px solid #0092ff;
+  background-color: #0092ff;
+  text-align: center;
+  margin: -1px;
+  border-bottom-right-radius: 0.1rem;
+  border-top-right-radius: 0.1rem;
+  &.pressed{
+    background-color: #fff;
+    color: #0092ff;
+  }
+}
