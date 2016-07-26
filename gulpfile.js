@@ -43,7 +43,7 @@ var config = {
         img: pth + '/img/*.*',
         html: pth + '/**/*.html',
         font: pth + '/font/*.*',
-        vendor:  pth + '/**/*.js',
+        vendor:  pth + '/vendor/*.js',
     },
     AUTOPREFIXER_BROWSERS: [
         'ie >= 8',
@@ -196,8 +196,8 @@ gulp.task('build:html', function(){
 gulp.task('build:img', function(){
     return gulp.src(config.build.img)
         //.pipe($.if(!isProduction, $.watch(config.build.img)))
-/*        .pipe(changed(config.dist.img, {extension: '.png'}))
-        .pipe(changed(config.dist.img, {extension: '.jpg'}))*/
+/*        .pipe(changed(config.dist.img, {extension: '.png'}))*/
+        .pipe(changed(config.dist.img))
         .pipe(gulp.dest(config.dist.img))
         .pipe(browserSync.stream());
 });
