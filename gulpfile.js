@@ -20,12 +20,14 @@ var argv = parseArgs(process.argv.slice(2),{
     string: ['f', 'o'],
     default: {
         'f': 'nofound',
+        'p': 3000,
         'o': date.getFullYear() + '' + (m < 10 ? '0' + m : m) + '' + (d < 10 ? '0' + d : d)//输出文件名
     }
 });
 
 var pth = 'src/' + (argv.f == 'nofound' ? '**' : argv.f),
-    dist = 'dist/' + (argv.f == 'nofound' ? '' : argv.f);
+    dist = 'dist/' + (argv.f == 'nofound' ? '' : argv.f),
+    port = argv.p;
 var isProduction = false;
 var config = {
     dist:{
@@ -43,7 +45,7 @@ var config = {
         img: pth + '/img/*.*',
         html: pth + '/**/*.html',
         font: pth + '/font/*.*',
-        vendor:  pth + '/vendor/*.js',
+        vendor:  pth + '/**/*.js',
     },
     AUTOPREFIXER_BROWSERS: [
         'ie >= 8',
@@ -88,13 +90,13 @@ gulp.task('appServer',function(){
     /*    var files = [
      dir + '/!**!/!*.*'
      ];*/
-
     browserSync.init({
         server: {
             baseDir: dir
         },
         open: false,
-        browser: ['google chrome']
+        browser: ['google chrome'],
+        port: port
     });
 
     //gulp.watch(config.build.less, ['less-watch']);
@@ -126,9 +128,9 @@ gulp.task("build:js", function(){
             //           sound:    "Bottle"
             //       })(err);
             console.log(err);
-            //this.emit('end');
+            this.emit('end');
         }}))
-        .pipe(changed(config.dist.js, {extension: '.js'}))
+        .pipe(changed(config.dist.js))
         //.pipe($.if(isProduction, $.sourcemaps.init()))
         //.pipe($.jshint())
         //.pipe($.jshint.reporter('default'))
@@ -146,7 +148,7 @@ gulp.task("build:less", function(){
     return gulp.src(config.build.less)
         //.pipe($.if(!isProduction, $.watch(config.build.less)))
         .pipe($.plumber({errorHandler: function (err) {
-            //console.log(err);
+            console.log(err);
             this.emit('end');
         }}))
         .pipe(changed(config.dist.css, {extension: '.css'}))
