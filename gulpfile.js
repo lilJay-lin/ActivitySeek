@@ -227,7 +227,7 @@ gulp.task('copy', [ 'copy:js']);
 
 gulp.task('watch', function(){
     function fn(glob, task){
-     var watch = gulp.watch(glob, function(evt){
+     var watch = $.watch(glob, function(evt){
          gulp.start(task);
      });
     }
