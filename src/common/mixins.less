@@ -240,9 +240,13 @@
     }
 
     > li:nth-child(@{counter}n + 1){
-      display: table;
       content: '';
       clear: both;
+      &:after{
+        display: table;
+        content: '';
+        clear: both;
+      }
     }
   }
 }

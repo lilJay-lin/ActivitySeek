@@ -136,7 +136,8 @@
                 me.$el.width(me.$el.find('li').length * 100 + '%');
                 $.each(me.arr, function(idx){
                     me.width += childrens.eq(idx).outerWidth();
-                })
+                });
+                me.width += 10;
                 me.$el.width(me.width);
             }else if(me.mode === 'normal'){
                 $.each(me.arr, function(idx){

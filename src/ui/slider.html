@@ -53,10 +53,10 @@
         start.x = e.touches[0].pageX,
                 move = 1;
     }).on('touchmove', function(e){
+        e.preventDefault();
         if(!move){
             return;
         }
-        e.preventDefault();
         if(e.originalEvent){
             e = e.originalEvent;
         }

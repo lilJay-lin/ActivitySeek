@@ -52,3 +52,7 @@
   清除所有dist目录下的文件 `gulp clean`
   
   清除所有build目录下打包的zip文件 `gulp archive:clean`
+  
+## TODOS
+
+* 引入weback, 公共js模块化引用，打包导出js

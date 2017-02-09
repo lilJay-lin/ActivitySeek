@@ -17,16 +17,33 @@
         return [y, m, d, h, mm, s].join('');
     }
 
-    /*时间对比，判断距离指定时间是否超过duration分钟；传入赛事时间，duration不传默认为10(分钟）*/
-/*    function compare(date, duration) {
-        duration = duration === void 0 || 10;
-        var now = getTime();
-        return parseInt(date, 10) - parseInt(now, 10) > duration * 100;
-    }*/
+    /*
+        mth:用整数表示月份，从0（１月）到１１（１２月）
+     *  new date(yyyy,mth,dd,hh,mm,ss);
+     *  距离指定时间现场N天N小时N分钟N秒
+     * */
+    function getCount(yyyy,mth,dd,hh,mm,ss){
+        var end = new Date(yyyy,mth,dd,hh,mm,ss),
+            now = Date.now(),
+            r = end - now,
+            rs = 1000,
+            rm = 60 * rs,
+            rh = 60 * rm,
+            rd = 24 * rh,
+            d = Math.floor(r / rd), //距离多少天
+            h = Math.floor((r - d * rd) / rh), //距离多少小时
+            m = Math.floor((r - d * rd - h * rh) / rm), //距离多少分
+            s = Math.floor((r - d * rd - h * rh - rm * m) / rs); //距离多少秒
+        return {
+            day: d,
+            hours: h,
+            minute: m,
+            second: s
+        }
+    }
 
-    /*使用例子:距离11点55分是否大于10分钟，结果为true*/
-    //var res = compare('20160706115521');
     root.Util = {
-        getTime: getTime()
+        getTime: getTime,
+        count: getCount
     };
 })(this);

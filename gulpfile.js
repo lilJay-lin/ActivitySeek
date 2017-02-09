@@ -16,12 +16,13 @@ var browserSync = require('browser-sync').create(),
 var date = new Date();
 var m = date.getMonth() + 1,
     d = date.getDate();
+var dateStr = date.getFullYear() + '' + (m < 10 ? '0' + m : m) + '' + (d < 10 ? '0' + d : d)
 var argv = parseArgs(process.argv.slice(2),{
     string: ['f', 'o'],
     default: {
         'f': 'nofound',
         'p': 3000,
-        'o': date.getFullYear() + '' + (m < 10 ? '0' + m : m) + '' + (d < 10 ? '0' + d : d)//输出文件名
+        'o': dateStr//输出文件名
     }
 });
 
@@ -46,6 +47,7 @@ var config = {
         html: pth + '/**/*.html',
         font: pth + '/font/*.*',
         vendor:  pth + '/**/*.js',
+        pack: 'pack'
     },
     AUTOPREFIXER_BROWSERS: [
         'ie >= 8',
@@ -227,7 +229,7 @@ gulp.task('copy', [ 'copy:js']);
 
 gulp.task('watch', function(){
     function fn(glob, task){
-     var watch = $.watch(glob, function(evt){
+     var watch = gulp.watch(glob, function(evt){
          gulp.start(task);
      });
     }
@@ -370,3 +372,10 @@ gulp.task('build',function(cb){
         cb
     )
 });
+
+gulp.task('pack', function (cb) {
+    var file = 'src/**'
+    return gulp.src(file)
+      .pipe($.zip(dateStr + '.zip'))
+      .pipe(gulp.dest(config.build.pack ));
+})

@@ -28,29 +28,37 @@ Slider.prototype = {
         });
     },
     bindEvents: function ($el, w, totalWidth){
-        var move = 0, start = {}, dist = {},
+        /*prevent:垂直方向移动*/
+        var move = 0, start = {}, dist = {}, prevent = 0,
             latest = 0, viewW = $(window).width(), maxRW = viewW - totalWidth;
         $el.on('touchstart', function(e){
             if(e.originalEvent){
                 e = e.originalEvent;
             }
             start.x = e.touches[0].pageX,
-                move = 1;
+                start.y = e.touches[0].pageY,
+                move = 1, prevent = 0;
         }).on('touchmove', function(e){
-            e.preventDefault();
-            if(!move){
+            if(!move || prevent){
                 return;
             }
             if(e.originalEvent){
                 e = e.originalEvent;
             }
             var x = e.changedTouches[0].pageX;
-            var temp =  x - start.x + latest;
+            var y = e.changedTouches[0].pageY;
+            if (Math.abs(y - start.y) > Math.abs(x - start.x)){
+                prevent = 1;
+                return;
+            }
+            e.preventDefault();
+            var temp = x - start.x + latest;
             dist.x = temp > 0 ? 0 : (temp < maxRW ? maxRW : temp);
             setPosition(dist.x, 0);
         }).on('touchend', function(e){
+            prevent = 0;
             move = 0;
-            latest = dist.x;
+            latest = dist.x || 0;
             start = {};
             dist = {};
         });
@@ -65,3 +73,5 @@ Slider.prototype = {
         }
     }
 }
+
+module.exports = Slider;
