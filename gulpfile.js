@@ -46,7 +46,7 @@ var config = {
         img: pth + '/img/*.*',
         html: pth + '/**/*.html',
         font: pth + '/font/*.*',
-        vendor:  pth + '/**/*.js',
+        vendor:  pth + '/**/*.*',
         pack: 'pack'
     },
     AUTOPREFIXER_BROWSERS: [
@@ -136,7 +136,7 @@ gulp.task("build:js", function(){
         //.pipe($.if(isProduction, $.sourcemaps.init()))
         //.pipe($.jshint())
         //.pipe($.jshint.reporter('default'))
-        .pipe($.if(isProduction, $.uglify()))
+        /*.pipe($.if(isProduction, $.uglify()))*/
         //.pipe($.if(isProduction, $.sourcemaps.write()))
         //.pipe($.rev()) //添加MD5
         .pipe($.plumber.stop())

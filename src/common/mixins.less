@@ -49,8 +49,8 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: @lines; // number of lines to show
   overflow: hidden;
-  line-height: @line-height;
-  max-height: @line-height * @lines;
+/*  line-height: @line-height;
+  max-height: @line-height * @lines;*/
 }
 
 // GRADIENTS
@@ -261,5 +261,46 @@
     right:0;
     z-index: @z-index ;
     background-color: @bg;
+  }
+}
+
+/*
+  垂直居中
+*/
+.vertical-align(@name: vertical-align, @height){
+  .@{name}{
+    height: @height;
+    font-size: 0;
+    &::before {
+      content: '';
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+    }
+  }
+}
+.vertical-align-middle{
+  vertical-align: middle;
+  display: inline-block;
+}
+
+/*
+  单页
+*/
+.singlePage(@background: #fff){
+  .page {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    height: 100%;
+    background-color: @background;
+  }
+  .page-content {
+    position: relative;
+    flex: 1;
+    height: 0%;
+    -webkit-overflow-scrolling: touch;
+    overflow-x:hidden;
   }
 }

@@ -68,5 +68,9 @@ Loader.prototype = {
     },
     on: function(){
         this.event.on.apply(this.event, [].slice.call(arguments));
+    },
+    destroy: function () {
+        var me = this;
+        me.$el.off(me.eventType);
     }
 };
