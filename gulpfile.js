@@ -4,18 +4,18 @@
 'use strict';
 
 var browserSync = require('browser-sync').create(),
-    path = require('path'),
-    gulp = require('gulp'),
-    del = require('del'),
-    fs = require('fs'),
-    $ = require('gulp-load-plugins')(),
-    changed = require('gulp-changed'),
-    base64 = require('gulp-base64'),
-    runSequence = require('run-sequence'),
-    parseArgs  = require('minimist');
+  path = require('path'),
+  gulp = require('gulp'),
+  del = require('del'),
+  fs = require('fs'),
+  $ = require('gulp-load-plugins')(),
+  changed = require('gulp-changed'),
+  base64 = require('gulp-base64'),
+  runSequence = require('run-sequence'),
+  parseArgs  = require('minimist');
 var date = new Date();
 var m = date.getMonth() + 1,
-    d = date.getDate();
+  d = date.getDate();
 var dateStr = date.getFullYear() + '' + (m < 10 ? '0' + m : m) + '' + (d < 10 ? '0' + d : d)
 var argv = parseArgs(process.argv.slice(2),{
     string: ['f', 'o'],
@@ -27,8 +27,8 @@ var argv = parseArgs(process.argv.slice(2),{
 });
 
 var pth = 'src/' + (argv.f == 'nofound' ? '**' : argv.f),
-    dist = 'dist/' + (argv.f == 'nofound' ? '' : argv.f),
-    port = argv.p;
+  dist = 'dist/' + (argv.f == 'nofound' ? '' : argv.f),
+  port = argv.p;
 var isProduction = false;
 var config = {
     dist:{
@@ -106,9 +106,9 @@ gulp.task('appServer',function(){
 //创建一个任务确保JS任务完成之前能够继续响应
 // 浏览器重载
 /*
-gulp.task('less-watch', ['build:less'], browserSync.reload);
-gulp.task('js-watch', ['build:js'], browserSync.reload);
-*/
+ gulp.task('less-watch', ['build:less'], browserSync.reload);
+ gulp.task('js-watch', ['build:js'], browserSync.reload);
+ */
 
 /*
  gulp.task('lint', function() {
@@ -122,56 +122,56 @@ gulp.task('js-watch', ['build:js'], browserSync.reload);
 gulp.task("build:js", function(){
     return gulp.src(config.build.js,{sourcemaps: true})
         //.pipe($.if(!isProduction, $.watch(config.build.js)))
-        .pipe($.plumber({errorHandler: function (err) {
-            // 处理编译less错误提示  防止错误之后gulp任务直接中断
-            // $.notify.onError({
-            //           title:    "编译错误",
-            //           message:  "错误信息: <%= error.message %>",
-            //           sound:    "Bottle"
-            //       })(err);
-            console.log(err);
-            this.emit('end');
-        }}))
-        .pipe(changed(config.dist.js))
+      .pipe($.plumber({errorHandler: function (err) {
+          // 处理编译less错误提示  防止错误之后gulp任务直接中断
+          // $.notify.onError({
+          //           title:    "编译错误",
+          //           message:  "错误信息: <%= error.message %>",
+          //           sound:    "Bottle"
+          //       })(err);
+          console.log(err);
+          this.emit('end');
+      }}))
+      .pipe(changed(config.dist.js))
         //.pipe($.if(isProduction, $.sourcemaps.init()))
         //.pipe($.jshint())
         //.pipe($.jshint.reporter('default'))
         /*.pipe($.if(isProduction, $.uglify()))*/
         //.pipe($.if(isProduction, $.sourcemaps.write()))
         //.pipe($.rev()) //添加MD5
-        .pipe($.plumber.stop())
-        .pipe(gulp.dest(config.dist.js))
-        .pipe(browserSync.stream())
-        .pipe($.size({showFiles: true, title: 'uglify'}))
-        .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
+      .pipe($.plumber.stop())
+      .pipe(gulp.dest(config.dist.js))
+      .pipe(browserSync.stream())
+      .pipe($.size({showFiles: true, title: 'uglify'}))
+      .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
 gulp.task("build:less", function(){
     return gulp.src(config.build.less)
         //.pipe($.if(!isProduction, $.watch(config.build.less)))
-        .pipe($.plumber({errorHandler: function (err) {
-            console.log(err);
-            this.emit('end');
-        }}))
-        .pipe(changed(config.dist.css, {extension: '.css'}))
-        .pipe($.less({
-            paths: [ path.join(__dirname, 'src/common') , path.join(__dirname, pth, '/css')]
-        }))
-        .pipe(base64({
-            baseDir: path.join(__dirname, pth + '/base64/'),
-            extensions: ['svg', 'png', /\.jpg#datauri$/i],
-            exclude:    [/\.server\.(com|net)\/dynamic\//, '--live.jpg'],
-            maxImageSize: 8*1024, // bytes
-            /*debug: false*/
-        }))
-        .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
-        .pipe($.size({showFiles: true, title: 'source'}))
-        .pipe($.if(isProduction, $.minifyCss({noAdvanced: true})))
-        .pipe($.plumber.stop())
-        .pipe(gulp.dest(config.dist.css))
-        .pipe(browserSync.stream())
-        .pipe($.size({showFiles: true, title: 'minified'}))
-        .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
+      .pipe($.plumber({errorHandler: function (err) {
+          console.log(err);
+          this.emit('end');
+      }}))
+      .pipe(changed(config.build.less, {extension: '.css'}))
+      .pipe($.less({
+          paths: [ path.join(__dirname, 'src/common') , path.join(__dirname, pth, '/css')]
+      }))
+      .pipe(base64({
+          baseDir: path.join(__dirname, pth + '/base64/'),
+          extensions: ['svg', 'png', /\.jpg#datauri$/i],
+          exclude:    [/\.server\.(com|net)\/dynamic\//, '--live.jpg'],
+          maxImageSize: 8*1024, // bytes
+          /*debug: false*/
+      }))
+      .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
+      .pipe($.size({showFiles: true, title: 'source'}))
+      .pipe($.if(isProduction, $.minifyCss({noAdvanced: true})))
+      .pipe($.plumber.stop())
+      .pipe(gulp.dest(config.dist.css))
+      .pipe(browserSync.stream())
+      .pipe($.size({showFiles: true, title: 'minified'}))
+      .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
 
@@ -185,53 +185,53 @@ gulp.task("build:less", function(){
 
 gulp.task('build:all', function(cb){
     runSequence(
-        ['build:less', 'build:js', 'build:html', 'build:font', 'build:vendor', 'build:img'],
-        cb
+      ['build:less', 'build:js', 'build:html', 'build:font', 'build:vendor', 'build:img'],
+      cb
     )
 });
 
 gulp.task('build:html', function(){
     return gulp.src(config.build.html)
         //.pipe($.if(!isProduction, $.watch(config.build.html)))
-        .pipe(changed(config.dist.html, {extension: '.html'}))
-        .pipe(gulp.dest(config.dist.html))
-        .pipe(browserSync.reload({stream:true}));
+      .pipe(changed(config.dist.html, {extension: '.html'}))
+      .pipe(gulp.dest(config.dist.html))
+      .pipe(browserSync.reload({stream:true}));
 });
 gulp.task('build:img', function(){
     return gulp.src(config.build.img)
         //.pipe($.if(!isProduction, $.watch(config.build.img)))
-/*        .pipe(changed(config.dist.img, {extension: '.png'}))*/
-        .pipe(changed(config.dist.img))
-        .pipe(gulp.dest(config.dist.img))
-        .pipe(browserSync.stream());
+        /*        .pipe(changed(config.dist.img, {extension: '.png'}))*/
+      .pipe(changed(config.dist.img))
+      .pipe(gulp.dest(config.dist.img))
+      .pipe(browserSync.stream());
 });
 gulp.task('build:font', function(){
     return gulp.src(config.build.font)
         //.pipe($.if(!isProduction, $.watch(config.build.font)))
-        .pipe(gulp.dest(config.dist.font))
-        .pipe(browserSync.stream());;
+      .pipe(gulp.dest(config.dist.font))
+      .pipe(browserSync.stream());;
 });
 gulp.task('build:vendor', function(){
     return gulp.src(config.build.vendor)
         //.pipe($.if(!isProduction, $.watch(config.build.vendor)))
-        .pipe(gulp.dest(config.dist.vendor))
-        .pipe(browserSync.stream());;
+      .pipe(gulp.dest(config.dist.vendor))
+      .pipe(browserSync.stream());;
 });
 
 gulp.task('copy:js', function(){
     return gulp.src([
-            'node_modules/jquery/dist/jquery.min.js'
-        ])
-        .pipe(gulp.dest('src/vendor'));
+        'node_modules/jquery/dist/jquery.min.js'
+    ])
+      .pipe(gulp.dest('src/vendor'));
 });
 
 gulp.task('copy', [ 'copy:js']);
 
 gulp.task('watch', function(){
     function fn(glob, task){
-     var watch = gulp.watch(glob, function(evt){
-         gulp.start(task);
-     });
+        var watch = gulp.watch(glob, function(evt){
+            gulp.start(task);
+        });
     }
     [
         {
@@ -259,8 +259,8 @@ gulp.task('watch', function(){
             task: 'build:font'
         },
     ].forEach(function(item){
-        fn(item.glob, item.task)
-    });
+          fn(item.glob, item.task)
+      });
 });
 
 gulp.task("clean", function(cb){
@@ -279,18 +279,18 @@ gulp.task('archive:zip', function() {
     var file = 'dist/' + argv.f + '/**' ;
 
     return gulp.src(file)
-        .pipe($.zip(argv.o + '.zip'))
-        .pipe(gulp.dest(config.build.zip + '/' + argv.f ));
+      .pipe($.zip(argv.o + '.zip'))
+      .pipe(gulp.dest(config.build.zip + '/' + argv.f ));
 });
 
 gulp.task('zip', function(cb){
     isProduction = true;
     runSequence (
-        'clean',
-        'build:all',
-        'archive:clean',
-        'archive:zip',
-        cb);
+      'clean',
+      'build:all',
+      'archive:clean',
+      'archive:zip',
+      cb);
 });
 
 
@@ -322,7 +322,7 @@ function createHtmlTemplate(pth){
      '   </body>\n' +
      '</html>' ;*/
     var html =
-        `<!DOCTYPE html>
+      `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
@@ -354,22 +354,22 @@ gulp.task('prepare', function(cb){
 });
 gulp.task('default',function(cb){
     runSequence (
-        'prepare',
-        'clean',
-        'copy',
-        ['appServer', 'build:all'],
-        'watch',
-        cb
+      'prepare',
+      'clean',
+      'copy',
+      ['appServer', 'build:all'],
+      'watch',
+      cb
     )
 });
 gulp.task('build',function(cb){
     runSequence (
-        'prepare',
-        'clean',
-        'copy',
-        'build:all',
-        'watch',
-        cb
+      'prepare',
+      'clean',
+      'copy',
+      'build:all',
+      'watch',
+      cb
     )
 });
 
