@@ -46,7 +46,7 @@ var config = {
         img: pth + '/img/*.*',
         html: pth + '/**/*.html',
         font: pth + '/font/*.*',
-        vendor:  pth + '/**/*.*',
+        vendor:  pth + '/vendor/*.*',
         pack: 'pack'
     },
     AUTOPREFIXER_BROWSERS: [
@@ -149,29 +149,29 @@ gulp.task("build:js", function(){
 gulp.task("build:less", function(){
     return gulp.src(config.build.less)
         //.pipe($.if(!isProduction, $.watch(config.build.less)))
-      .pipe($.plumber({errorHandler: function (err) {
-          console.log(err);
-          this.emit('end');
-      }}))
-      .pipe(changed(config.build.less, {extension: '.css'}))
-      .pipe($.less({
-          paths: [ path.join(__dirname, 'src/common') , path.join(__dirname, pth, '/css')]
-      }))
-      .pipe(base64({
-          baseDir: path.join(__dirname, pth + '/base64/'),
-          extensions: ['svg', 'png', /\.jpg#datauri$/i],
-          exclude:    [/\.server\.(com|net)\/dynamic\//, '--live.jpg'],
-          maxImageSize: 8*1024, // bytes
-          /*debug: false*/
-      }))
-      .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
-      .pipe($.size({showFiles: true, title: 'source'}))
-      .pipe($.if(isProduction, $.minifyCss({noAdvanced: true})))
-      .pipe($.plumber.stop())
-      .pipe(gulp.dest(config.dist.css))
-      .pipe(browserSync.stream())
-      .pipe($.size({showFiles: true, title: 'minified'}))
-      .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
+        .pipe($.plumber({errorHandler: function (err) {
+            console.log(err);
+            this.emit('end');
+        }}))
+        .pipe(changed(config.dist.css, {extension: '.css'}))
+        .pipe($.less({
+            paths: [ path.join(__dirname, 'src/common') , path.join(__dirname, pth, '/css')]
+        }))
+        .pipe(base64({
+            baseDir: path.join(__dirname, pth + '/base64/'),
+            extensions: ['svg', 'png', /\.jpg#datauri$/i],
+            exclude:    [/\.server\.(com|net)\/dynamic\//, '--live.jpg'],
+            maxImageSize: 8*1024, // bytes
+            /*debug: false*/
+        }))
+        .pipe($.autoprefixer({browsers: config.AUTOPREFIXER_BROWSERS}))
+        .pipe($.size({showFiles: true, title: 'source'}))
+        .pipe($.if(isProduction, $.minifyCss({noAdvanced: true})))
+        .pipe($.plumber.stop())
+        .pipe(gulp.dest(config.dist.css))
+        .pipe(browserSync.stream())
+        .pipe($.size({showFiles: true, title: 'minified'}))
+        .pipe($.size({showFiles: true, gzip: true, title: 'gzipped'}));
 });
 
 
