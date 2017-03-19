@@ -37,7 +37,7 @@ var config = {
         img: dist + '/img',
         html: dist,
         font: dist + '/font',
-        vendor: dist
+        vendor: dist + '/vendor',
     },
     build: {
         zip: 'dist/build',
